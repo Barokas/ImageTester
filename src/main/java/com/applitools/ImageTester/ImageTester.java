@@ -93,7 +93,7 @@ public class ImageTester {
 
 
 
-            if (eyes_utils_enabled) builder.setEyesUtilitiesConfig(new EyesUtilitiesConfig(cmd));
+            builder.setEyesUtilitiesConfig(new EyesUtilitiesConfig(cmd));
 
 
             ITestable suite = builder.build();

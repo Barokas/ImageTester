@@ -32,6 +32,13 @@ public class EyesUtilitiesConfig {
             getImages_= cmd.hasOption("gi");
             getGifs_=cmd.hasOption("gg");
         }
+        else{
+            viewKey_ = cmd.getOptionValue("vk");
+            destinationFolder_=cmd.getOptionValue("of", "./");
+            downloadDiffs_=false;
+            getImages_= false;
+            getGifs_=false;
+        }
     }
 
 
