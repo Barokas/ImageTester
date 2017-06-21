@@ -229,7 +229,7 @@ public class ImageTester {
                 .build());
         options.addOption(Option.builder("sp")
                 .longOpt("selectedPages")
-                .desc("PDF pages to select")
+                .desc("PDF pages to select - for example 1,2,4-7")
                 .hasArg()
                 .argName("Pages")
                 .build());
