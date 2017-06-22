@@ -1,4 +1,4 @@
-package com.applitools.ImageTester;
+package com.applitools.ImageTester.TestObjects;
 
 import com.applitools.eyes.BatchInfo;
 import com.applitools.eyes.Eyes;
@@ -11,11 +11,11 @@ public class Batch extends TestUnit {
     private BatchInfo batch_;
     private Queue<Test> tests_ = new LinkedList<Test>();
 
-    protected Batch(File file) {
+    public Batch(File file) {
         super(file);
     }
 
-    protected Batch(BatchInfo batch) {
+    public Batch(BatchInfo batch) {
         super(batch.getName());
         batch_ = batch;
     }
@@ -25,12 +25,24 @@ public class Batch extends TestUnit {
         eyes.setBatch(batch_);
         System.out.printf("Batch: %s\n", name());
         for (Test test : tests_) {
-            test.run(eyes);
+            try {
+                test.run(eyes);
+            } finally {
+                test.dispose();
+            }
         }
         eyes.setBatch(null);
     }
 
     public void addTest(Test test) {
         tests_.add(test);
+    }
+
+    @Override
+    public void dispose() {
+        if (tests_ == null) return;
+        for (Test test : tests_) {
+            test.dispose();
+        }
     }
 }

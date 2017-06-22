@@ -1,4 +1,4 @@
-package com.applitools.ImageTester;
+package com.applitools.ImageTester.TestObjects;
 
 import com.applitools.eyes.Eyes;
 
@@ -11,7 +11,7 @@ public class Suite extends TestUnit {
     private Queue<Batch> batches_;
     private Test test_ = null;
 
-    protected Suite(File file) {
+    public Suite(File file) {
         super(file);
         batches_ = new LinkedList<Batch>();
     }
@@ -23,7 +23,11 @@ public class Suite extends TestUnit {
         }
 
         for (Batch batch : batches_) {
-            batch.run(eyes);
+            try {
+                batch.run(eyes);
+            }finally {
+                batch.dispose();
+            }
         }
 
         if (test_ != null) {
@@ -53,5 +57,10 @@ public class Suite extends TestUnit {
     public void setTest(Test test) {
         if (test_ != null) throw new RuntimeException("test is not null as expected!");
         test_ = test;
+    }
+
+    @Override
+    public void dispose() {
+        if (test_ != null) test_.dispose();
     }
 }

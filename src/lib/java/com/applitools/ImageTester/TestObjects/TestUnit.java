@@ -1,8 +1,11 @@
-package com.applitools.ImageTester;
+package com.applitools.ImageTester.TestObjects;
+
+import com.applitools.ImageTester.Interfaces.IDisposable;
+import com.applitools.ImageTester.Interfaces.ITestable;
 
 import java.io.File;
 
-public abstract class TestUnit implements ITestable {
+public abstract class TestUnit implements ITestable, IDisposable {
     protected final File file_;
     protected String name_;
 

@@ -1,5 +1,7 @@
-package com.applitools.ImageTester;
+package com.applitools.ImageTester.TestObjects;
 
+import com.applitools.ImageTester.Interfaces.ITestable;
+import com.applitools.ImageTester.Patterns;
 import com.applitools.eyes.Eyes;
 
 import javax.imageio.ImageIO;
@@ -13,7 +15,7 @@ public class ImageStep extends TestUnit {
     private static final Pattern pattern = Patterns.IMAGE;
     private BufferedImage img_;
 
-    protected ImageStep(File file) {
+    public ImageStep(File file) {
         super(file);
     }
 
@@ -40,7 +42,7 @@ public class ImageStep extends TestUnit {
         return super.name().replaceAll(Patterns.IMAGE_EXT, "");
     }
 
-    protected static boolean supports(File file) {
+    public static boolean supports(File file) {
         return pattern.matcher(file.getName()).matches();
     }
 
@@ -50,5 +52,10 @@ public class ImageStep extends TestUnit {
 
     public Collection<ITestable> getRegions() throws IOException {
         return RegionStep.getSteps(this);
+    }
+
+    @Override
+    public void dispose() {
+        if (img_ != null) img_ = null;
     }
 }

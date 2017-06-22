@@ -1,4 +1,4 @@
-# Image Tester
+# Image Tester  [ ![Download](https://api.bintray.com/packages/yanirta/generic/ImageTester/images/download.svg) ](https://bintray.com/yanirta/generic/ImageTester/_latestVersion)
 A Cli tool to perform Applitools visual UI validation.
 Based on images or PDFs.
 

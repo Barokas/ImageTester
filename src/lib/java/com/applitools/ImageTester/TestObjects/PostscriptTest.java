@@ -1,4 +1,4 @@
-package com.applitools.ImageTester;
+package com.applitools.ImageTester.TestObjects;
 
 import com.applitools.eyes.Eyes;
 import com.applitools.eyes.TestResults;
@@ -20,7 +20,7 @@ public class PostscriptTest extends Test {
     private static final String PS_PATTERN = "(.+)" + PS_EXT;
     private static final Pattern pattern = Pattern.compile(PS_PATTERN);
 
-    protected PostscriptTest(File file, String appname) {
+    public PostscriptTest(File file, String appname) {
         super(file, appname);
     }
 
@@ -69,7 +69,7 @@ public class PostscriptTest extends Test {
         }
     }
 
-    protected static boolean supports(File file) {
+    public static boolean supports(File file) {
         return false;
         //return pattern.matcher(file.getName()).matches();
     }

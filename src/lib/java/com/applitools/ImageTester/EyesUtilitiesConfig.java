@@ -10,27 +10,28 @@ public class EyesUtilitiesConfig {
 
     private String viewKey_;
     private String destinationFolder_;
-    private Boolean downloadDiffs_=false;
-    private Boolean getImages_=false;
-    private Boolean getGifs_=false;
+    private Boolean downloadDiffs_ = false;
+    private Boolean getImages_ = false;
+    private Boolean getGifs_ = false;
 
 
-    public EyesUtilitiesConfig(String viewKey, String destinationFolder ,Boolean downloadDiffs, Boolean getImages, Boolean getGifs) {
+    private EyesUtilitiesConfig(String viewKey, String destinationFolder, Boolean downloadDiffs, Boolean getImages, Boolean getGifs) {
         viewKey_ = viewKey;
         destinationFolder_ = destinationFolder;
-        downloadDiffs_=downloadDiffs;
-        getImages_=getImages;
-        getGifs_=getGifs;
+        downloadDiffs_ = downloadDiffs;
+        getImages_ = getImages;
+        getGifs_ = getGifs;
     }
-    public EyesUtilitiesConfig (CommandLine cmd) throws ParseException {
+
+    public EyesUtilitiesConfig(CommandLine cmd) throws ParseException {
         if (cmd.hasOption("gd") || cmd.hasOption("gi") || cmd.hasOption("gg")) {
             if (!cmd.hasOption("vk"))
                 throw new ParseException("gd|gi|gg must be called with enterprise view-key (vk)");
             viewKey_ = cmd.getOptionValue("vk");
-            destinationFolder_=cmd.getOptionValue("of", "./");
-            downloadDiffs_=cmd.hasOption("gd");
-            getImages_= cmd.hasOption("gi");
-            getGifs_=cmd.hasOption("gg");
+            destinationFolder_ = cmd.getOptionValue("of", "./");
+            downloadDiffs_ = cmd.hasOption("gd");
+            getImages_ = cmd.hasOption("gi");
+            getGifs_ = cmd.hasOption("gg");
         }
         else{
             viewKey_ = cmd.getOptionValue("vk");
@@ -81,7 +82,6 @@ public class EyesUtilitiesConfig {
     public void setGetGifs(Boolean getGifs) {
         this.getGifs_ = getGifs;
     }
-
 
 
 }

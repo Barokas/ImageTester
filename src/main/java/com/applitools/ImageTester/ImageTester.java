@@ -1,5 +1,6 @@
 package com.applitools.ImageTester;
 
+import com.applitools.ImageTester.Interfaces.ITestable;
 import com.applitools.eyes.*;
 import org.apache.commons.cli.*;
 import org.apache.log4j.*;
@@ -11,7 +12,7 @@ import java.net.URI;
 import java.net.URISyntaxException;
 
 public class ImageTester {
-    private static final String cur_ver = "0.2.1"; //TODO find more suitable place and logic
+    private static final String cur_ver = "0.2.2"; //TODO find more suitable place and logic
     private static final String eyes_utils = "EyesUtilities.jar";
 
     private static boolean eyes_utils_enabled = false;

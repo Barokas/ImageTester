@@ -1,8 +1,11 @@
-package com.applitools.ImageTester;
+package com.applitools.ImageTester.TestObjects;
 
 import com.applitools.Commands.AnimatedDiffs;
 import com.applitools.Commands.DownloadDiffs;
 import com.applitools.Commands.DownloadImages;
+import com.applitools.ImageTester.EyesUtilitiesConfig;
+import com.applitools.ImageTester.Interfaces.IDisposable;
+import com.applitools.ImageTester.Interfaces.ITestable;
 import com.applitools.eyes.Eyes;
 import com.applitools.eyes.EyesException;
 import com.applitools.eyes.RectangleSize;
@@ -19,14 +22,11 @@ public class Test extends TestUnit {
     private EyesUtilitiesConfig eyesUtilitiesConfig_;
 
 
-
-
-
-    protected Test(File file, String appname) {
+    public Test(File file, String appname) {
         this(file, appname, null);
     }
 
-    protected Test(File file, String appname, RectangleSize viewportSize) {
+    public Test(File file, String appname, RectangleSize viewportSize) {
         super(file);
         steps_ = new LinkedList<ITestable>();
         appname_ = appname;
@@ -38,16 +38,25 @@ public class Test extends TestUnit {
         for (ITestable step : steps_) {
             try {
                 step.run(eyes);
+                //Disposing steps without regions immediately
+                if (step instanceof IDisposable)
+                    if (!(step instanceof ImageStep && ((ImageStep) step).hasRegionFile()))
+                        ((IDisposable) step).dispose();
             } catch (Throwable e) {
                 System.out.printf("Error in Step %s: \n %s \n This step will be skipped!", step.name(), e.getMessage());
                 e.printStackTrace();
             }
         }
-        try {
+        try
+
+        {
             TestResults result = eyes.close(false);
             printTestResults(result);
             handleResultsDownload(result);
-        } catch (EyesException e) {
+        } catch (
+                EyesException e)
+
+        {
             System.out.printf("Error closing test %s \nPath: %s \nReason: %s \n",
                     name(),
                     file_.getAbsolutePath(),
@@ -62,14 +71,19 @@ public class Test extends TestUnit {
                 System.out.println("I don't have any idea what just happened.");
                 System.out.println("Please try reaching our support at support@applitools.com");
             }
-        } catch (Exception e) {
+        } catch (
+                Exception e)
+
+        {
             System.out.println("Oops, something went wrong!");
             System.out.print(e);
             e.printStackTrace();
         }
+
     }
 
     protected void handleResultsDownload(TestResults results) throws Exception {
+        if (eyesUtilitiesConfig_ == null) return;
         if (eyesUtilitiesConfig_.getDownloadDiffs() || eyesUtilitiesConfig_.getGetGifs() || eyesUtilitiesConfig_.getGetImages()) {
             if (eyesUtilitiesConfig_.getViewKey() == null) throw new RuntimeException("The view-key cannot be null");
             if (eyesUtilitiesConfig_.getDownloadDiffs() && !results.isNew() && !results.isPassed())
@@ -89,8 +103,8 @@ public class Test extends TestUnit {
         steps_.addAll(steps);
     }
 
-    protected void printTestResults(TestResults result){
-        String res = result.getSteps()>0 ? (result.isNew() ? "New" : (result.isPassed() ? "Passed" : "Failed")) : "Empty";
+    protected void printTestResults(TestResults result) {
+        String res = result.getSteps() > 0 ? (result.isNew() ? "New" : (result.isPassed() ? "Passed" : "Failed")) : "Empty";
         System.out.printf("\t[%s] - %s", res, name());
         if (!result.isPassed() && !result.isNew())
             System.out.printf("\tResult url: %s", result.getUrl());
@@ -98,12 +112,12 @@ public class Test extends TestUnit {
 
     }
 
-    public void setEyesUtilitiesConfig(EyesUtilitiesConfig eyesUtilitiesConfig){
-        eyesUtilitiesConfig_=eyesUtilitiesConfig;
+    public void setEyesUtilitiesConfig(EyesUtilitiesConfig eyesUtilitiesConfig) {
+        eyesUtilitiesConfig_ = eyesUtilitiesConfig;
     }
 
     protected static List<Integer> parsePagesToList(String input) {
-        if (input==null) return null;
+        if (input == null) return null;
         ArrayList<Integer> pagesToInclude = new ArrayList<Integer>();
         String[] inputPages = input.split(",");
         for (int i = 0; i < inputPages.length; i++) {
@@ -128,4 +142,11 @@ public class Test extends TestUnit {
     }
 
 
+    @Override
+    public void dispose() {
+        if (steps_ == null) return;
+        for (ITestable step : steps_) {
+            if (step instanceof IDisposable) ((IDisposable) step).dispose();
+        }
+    }
 }

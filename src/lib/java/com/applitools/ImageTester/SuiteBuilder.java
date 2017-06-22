@@ -1,8 +1,11 @@
 package com.applitools.ImageTester;
 
+import com.applitools.ImageTester.Interfaces.ITestable;
+import com.applitools.ImageTester.TestObjects.*;
 import com.applitools.eyes.BatchInfo;
 import com.applitools.eyes.RectangleSize;
 import org.apache.commons.io.comparator.NameFileComparator;
+
 import java.io.File;
 import java.io.IOException;
 import java.util.Arrays;
@@ -43,8 +46,8 @@ public class SuiteBuilder {
         return build(rootFolder_, appname_, viewport_);
     }
 
-    public void setDpi(float dpi){
-        this.pdfdpi_ =dpi;
+    public void setDpi(float dpi) {
+        this.pdfdpi_ = dpi;
     }
 
     private ITestable build(File curr, String appname, RectangleSize viewport) throws IOException {
@@ -59,11 +62,11 @@ public class SuiteBuilder {
         }
         ITestable unit = build(curr, appname, viewport, jenkinsBatch);
         if (unit instanceof ImageStep) {
-            ImageStep step= (ImageStep) unit;
-            Test test = new Test(step.getFile(),appname);
+            ImageStep step = (ImageStep) unit;
+            Test test = new Test(step.getFile(), appname);
             test.setEyesUtilitiesConfig(eyesUtilitiesConfig_);
             test.addStep(step);
-            unit=test;
+            unit = test;
         }
         if (unit instanceof Test && jenkinsBatch != null) {
             jenkinsBatch.addTest((Test) unit);
@@ -85,14 +88,14 @@ public class SuiteBuilder {
 
         if (curr.isFile()) {
             if (PDFTest.supports(curr)) {
-                PDFTest pdftest= new PDFTest(curr, appname_, pdfdpi_);
+                PDFTest pdftest = new PDFTest(curr, appname_, pdfdpi_);
                 pdftest.setEyesUtilitiesConfig(eyesUtilitiesConfig_);
                 pdftest.setPages(pages_);
                 pdftest.setPdfPassword(pdfPassword_);
                 return pdftest;
             }
             if (PostscriptTest.supports(curr)) {
-                PostscriptTest postScriptest= new PostscriptTest(curr, appname);
+                PostscriptTest postScriptest = new PostscriptTest(curr, appname);
                 postScriptest.setEyesUtilitiesConfig(eyesUtilitiesConfig_);
                 return postScriptest;
             }
