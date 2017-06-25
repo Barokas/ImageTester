@@ -88,10 +88,9 @@ public class SuiteBuilder {
 
         if (curr.isFile()) {
             if (PDFTest.supports(curr)) {
-                PDFTest pdftest = new PDFTest(curr, appname_, pdfdpi_);
+                PDFTest pdftest = new PDFTest(curr, appname_, pdfdpi_,pdfPassword_);
                 pdftest.setEyesUtilitiesConfig(eyesUtilitiesConfig_);
                 pdftest.setPages(pages_);
-                pdftest.setPdfPassword(pdfPassword_);
                 return pdftest;
             }
             if (PostscriptTest.supports(curr)) {

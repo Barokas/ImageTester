@@ -19,22 +19,36 @@ import java.util.regex.Pattern;
 public class PDFTest extends Test {
     private static final Pattern pattern = Patterns.PDF;
     private float dpi_;
-    private String pdfPassword;
+    private String pdfPassword_;
     private List<Integer> pagesList_;
     private String pages_;
-
-    public void setPages(String pages) throws IOException {
-        this.pages_ = pages;
-        this.pagesList_ = setPagesList(pages);
-    }
+    private PDDocument document_;
+    private PDFRenderer pdfRenderer_;
 
     protected PDFTest(File file, String appname) {
         this(file, appname, 300f);
     }
 
-    public PDFTest(File file, String appname, float dpi) {
+    protected PDFTest(File file, String appname, float dpi) {
+        this(file, appname, 300f,null);
+    }
+
+    public PDFTest(File file, String appname, float dpi, String pdfPassword) {
         super(file, appname);
+        this.pdfPassword_ =pdfPassword;
         this.dpi_ = dpi;
+        try {
+            document_ = PDDocument.load(file_, pdfPassword);
+            pdfRenderer_ = new PDFRenderer(document_);
+        } catch (IOException e) {
+            System.out.printf("Error closing test %s \nPath: %s \nReason: %s \n", e.getMessage());
+            e.printStackTrace();
+        }
+    }
+
+    public void setPages(String pages){
+        this.pages_ = pages;
+        this.pagesList_ = setPagesList(pages);
     }
 
     @Override
@@ -43,18 +57,15 @@ public class PDFTest extends Test {
         TestResults result = null;
 
         try {
-            PDDocument document = PDDocument.load(file_, pdfPassword);
-            PDFRenderer pdfRenderer = new PDFRenderer(document);
             eyes.open(appname_, name());
-
             for (int i = 0; i < pagesList_.size(); i++) {
-                BufferedImage bim = pdfRenderer.renderImageWithDPI(pagesList_.get(i) - 1, dpi_);
+                BufferedImage bim = pdfRenderer_.renderImageWithDPI(pagesList_.get(i) - 1, dpi_);
                 eyes.checkImage(bim, String.format("Page-%s", pagesList_.get(i)));
             }
             result = eyes.close(false);
             printTestResults(result);
             handleResultsDownload(result);
-            document.close();
+            document_.close();
         } catch (IOException e) {
             ex = e;
             System.out.printf("Error closing test %s \nPath: %s \nReason: %s \n", e.getMessage());
@@ -78,20 +89,19 @@ public class PDFTest extends Test {
     }
 
     public String getPdfPassword() {
-        return pdfPassword;
+        return pdfPassword_;
     }
 
     public void setPdfPassword(String pdfPassword) {
-        this.pdfPassword = pdfPassword;
+        this.pdfPassword_ = pdfPassword;
     }
 
-    public List<Integer> setPagesList(String pages) throws IOException {
+    public List<Integer> setPagesList(String pages) {
+        if ((document_ ==null) ||(pdfRenderer_ ==null)) return null;
         if (pages != null) return parsePagesToList(pages);
         else {
-            PDDocument document = PDDocument.load(this.file_, this.pdfPassword);
-            PDFRenderer pdfRenderer = new PDFRenderer(document);
             ArrayList<Integer> list = new ArrayList<Integer>();
-            for (int page = 0; page < document.getNumberOfPages(); ++page) {
+            for (int page = 0; page < document_.getNumberOfPages(); ++page) {
                 list.add(page + 1);
             }
             return list;
