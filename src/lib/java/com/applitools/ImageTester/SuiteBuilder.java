@@ -51,16 +51,17 @@ public class SuiteBuilder {
     }
 
     private ITestable build(File curr, String appname, RectangleSize viewport) throws IOException {
-        String jenkinsJobName = System.getenv("JOB_NAME");
-        String jenkinsApplitoolsBatchId = System.getenv("APPLITOOLS_BATCH_ID");
-        Batch jenkinsBatch = null;
 
-        if ((jenkinsJobName != null) && (jenkinsApplitoolsBatchId != null)) {
-            BatchInfo batch = new BatchInfo(jenkinsJobName);
-            batch.setId(jenkinsApplitoolsBatchId);
-            jenkinsBatch = new Batch(batch);
+        String CIApplitoolsBatchName=System.getenv("JOB_NAME")!=null?System.getenv("JOB_NAME"):System.getenv("APPLITOOLS_BATCH_NAME");
+        String CIApplitoolsBatchId = System.getenv("APPLITOOLS_BATCH_ID");
+        Batch CIBatch = null;
+
+        if  (CIApplitoolsBatchId != null) {
+            BatchInfo batch = CIApplitoolsBatchName!=null?new BatchInfo(CIApplitoolsBatchName):new BatchInfo("ImageTesterBatch");
+            batch.setId(CIApplitoolsBatchId);
+            CIBatch = new Batch(batch);
         }
-        ITestable unit = build(curr, appname, viewport, jenkinsBatch);
+        ITestable unit = build(curr, appname, viewport, CIBatch);
         if (unit instanceof ImageStep) {
             ImageStep step = (ImageStep) unit;
             Test test = new Test(step.getFile(), appname);
@@ -68,9 +69,9 @@ public class SuiteBuilder {
             test.addStep(step);
             unit = test;
         }
-        if (unit instanceof Test && jenkinsBatch != null) {
-            jenkinsBatch.addTest((Test) unit);
-            return jenkinsBatch;
+        if (unit instanceof Test && CIBatch != null) {
+            CIBatch.addTest((Test) unit);
+            return CIBatch;
         } else {
             return unit;
         }
