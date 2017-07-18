@@ -1,8 +1,8 @@
 package com.applitools.ImageTester.TestObjects;
 
 import com.applitools.ImageTester.Patterns;
-import com.applitools.eyes.Eyes;
 import com.applitools.eyes.TestResults;
+import com.applitools.eyes.images.Eyes;
 import org.apache.pdfbox.pdmodel.PDDocument;
 import org.apache.pdfbox.rendering.PDFRenderer;
 

@@ -2,6 +2,7 @@ package com.applitools.ImageTester;
 
 import com.applitools.ImageTester.Interfaces.ITestable;
 import com.applitools.eyes.*;
+import com.applitools.eyes.images.Eyes;
 import org.apache.commons.cli.*;
 import org.apache.log4j.*;
 

@@ -6,10 +6,10 @@ import com.applitools.Commands.DownloadImages;
 import com.applitools.ImageTester.EyesUtilitiesConfig;
 import com.applitools.ImageTester.Interfaces.IDisposable;
 import com.applitools.ImageTester.Interfaces.ITestable;
-import com.applitools.eyes.Eyes;
 import com.applitools.eyes.EyesException;
 import com.applitools.eyes.RectangleSize;
 import com.applitools.eyes.TestResults;
+import com.applitools.eyes.images.Eyes;
 
 import java.io.File;
 import java.util.*;

@@ -1,6 +1,7 @@
 package com.applitools.ImageTester.Interfaces;
 
-import com.applitools.eyes.Eyes;
+
+import com.applitools.eyes.images.Eyes;
 
 import java.io.IOException;
 

@@ -2,7 +2,7 @@ package com.applitools.ImageTester.TestObjects;
 
 import com.applitools.ImageTester.Interfaces.ITestable;
 import com.applitools.ImageTester.Patterns;
-import com.applitools.eyes.Eyes;
+import com.applitools.eyes.images.Eyes;
 
 import javax.imageio.ImageIO;
 import java.awt.image.BufferedImage;
