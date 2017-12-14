@@ -1,8 +1,7 @@
 package com.applitools.ImageTester;
 
-import com.sun.xml.internal.ws.util.StringUtils;
-import org.apache.commons.cli.CommandLine;
 import org.apache.commons.cli.ParseException;
+import org.apache.commons.lang3.StringUtils;
 
 import java.util.EnumSet;
 

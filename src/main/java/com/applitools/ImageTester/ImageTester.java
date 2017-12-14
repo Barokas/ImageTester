@@ -93,10 +93,10 @@ public class ImageTester {
             // Read PDF Password
             if (cmd.hasOption("pp")) builder.setPdfPassword(cmd.getOptionValue("pp"));
 
-
+            // Set Ignore Caret
+            eyes.setIgnoreCaret(cmd.hasOption("ic"));
 
             if (eyes_utils_enabled) builder.setEyesUtilitiesConfig(new EyesUtilitiesConfig(cmd));
-
 
             ITestable suite = builder.build();
             if (suite == null) {
@@ -281,6 +281,12 @@ public class ImageTester {
                     .hasArg(false)
                     .build()
             );
+
+            options.addOption(Option.builder("ic")
+                    .longOpt("ignoreCaret")
+                    .desc("Ignore blinking cursor differences")
+                    .hasArg(false)
+                    .build());
         }
         return options;
     }
