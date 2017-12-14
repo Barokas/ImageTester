@@ -1,7 +1,6 @@
 package com.applitools.ImageTester.TestObjects;
 
 
-
 import com.applitools.eyes.images.Eyes;
 
 import java.io.File;
@@ -61,7 +60,6 @@ public class Suite extends TestUnit {
         test_ = test;
     }
 
-    @Override
     public void dispose() {
         if (test_ != null) test_.dispose();
     }

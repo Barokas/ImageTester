@@ -1,7 +1,7 @@
 package com.applitools.ImageTester.TestObjects;
 
-import com.applitools.eyes.images.Eyes;
 import com.applitools.eyes.TestResults;
+import com.applitools.eyes.images.Eyes;
 import org.ghost4j.document.DocumentException;
 import org.ghost4j.document.PSDocument;
 import org.ghost4j.renderer.RendererException;

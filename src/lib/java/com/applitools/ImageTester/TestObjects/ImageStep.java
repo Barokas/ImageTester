@@ -54,7 +54,6 @@ public class ImageStep extends TestUnit {
         return RegionStep.getSteps(this);
     }
 
-    @Override
     public void dispose() {
         if (img_ != null) img_ = null;
     }
