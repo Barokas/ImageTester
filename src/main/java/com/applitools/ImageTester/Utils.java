@@ -1,8 +1,7 @@
 package com.applitools.ImageTester;
 
-import com.sun.xml.internal.ws.util.StringUtils;
-import org.apache.commons.cli.CommandLine;
 import org.apache.commons.cli.ParseException;
+import org.apache.commons.lang.WordUtils;
 
 import java.util.EnumSet;
 
@@ -21,7 +20,9 @@ public class Utils {
     public static String getEnumValues(Class type) {
         StringBuilder sb = new StringBuilder();
         for (Object val : EnumSet.allOf(type)) {
-            sb.append(StringUtils.capitalize(val.toString().toLowerCase()));
+
+            sb.append(WordUtils.capitalize(val.toString().toLowerCase()));
+
             sb.append('|');
         }
         return sb.substring(0, sb.length() - 1);

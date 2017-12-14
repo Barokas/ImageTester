@@ -93,6 +93,9 @@ public class ImageTester {
             // Read PDF Password
             if (cmd.hasOption("pp")) builder.setPdfPassword(cmd.getOptionValue("pp"));
 
+            // Set Ignore Caret
+            eyes.setIgnoreCaret(cmd.hasOption("ic"));
+
 
 
             builder.setEyesUtilitiesConfig(new EyesUtilitiesConfig(cmd));
@@ -240,6 +243,11 @@ public class ImageTester {
                 .desc("PDF Password")
                 .hasArg()
                 .argName("Password")
+                .build());
+        options.addOption(Option.builder("ic")
+                .longOpt("ignoreCaret")
+                .desc("Ignore blinking cursor differences")
+                .hasArg(false)
                 .build());
 
 
