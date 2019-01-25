@@ -1,4 +1,4 @@
-package com.applitools.ImageTester;
+package lib.java.com.applitools.ImageTester;
 
 import org.apache.commons.cli.CommandLine;
 import org.apache.commons.cli.ParseException;

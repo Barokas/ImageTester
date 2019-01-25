@@ -1,16 +1,17 @@
-package com.applitools.ImageTester.TestObjects;
+package lib.java.com.applitools.ImageTester.TestObjects;
 
-import com.applitools.ImageTester.Patterns;
+import com.applitools.ImageTester.ImageTester;
+import com.applitools.eyes.BatchInfo;
+import com.applitools.eyes.RectangleSize;
 import com.applitools.eyes.TestResults;
 import com.applitools.eyes.images.Eyes;
+import lib.java.com.applitools.ImageTester.Interfaces.IResultsReporter;
+import lib.java.com.applitools.ImageTester.PDFUtilities;
+import lib.java.com.applitools.ImageTester.Patterns;
 import org.apache.pdfbox.pdmodel.PDDocument;
-import org.apache.pdfbox.rendering.PDFRenderer;
 
-import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
-import java.util.ArrayList;
-import java.util.List;
 import java.util.regex.Pattern;
 
 /**
@@ -20,47 +21,81 @@ public class PDFTest extends Test {
     private static final Pattern pattern = Patterns.PDF;
     private float dpi_;
     private String pdfPassword;
-    private List<Integer> pagesList_;
     private String pages_;
+    private boolean includePagesInTestName_;
 
-    public void setPages(String pages) throws IOException {
+    public void setIncludePagesInTestName_(boolean includePagesInTestName){
+        this.includePagesInTestName_=includePagesInTestName;
+    }
+
+    public void setPages(String pages, boolean includePagesInTestName) throws IOException {
         this.pages_ = pages;
-        this.pagesList_ = setPagesList(pages);
+        this.includePagesInTestName_ = includePagesInTestName;
     }
 
-    protected PDFTest(File file, String appname) {
-        this(file, appname, 300f);
+    public PDFTest(File file, String appname) {
+        this(file, appname, 300f, null);
     }
 
-    public PDFTest(File file, String appname, float dpi) {
-        super(file, appname);
+    public PDFTest(File file, String appname, float dpi, RectangleSize viewport) {
+        this(file, appname, dpi, viewport, null);
+    }
+
+    public PDFTest(String file, String appname, float dpi, RectangleSize viewport) {
+        this(new File(file), appname, dpi, viewport, null);
+    }
+
+    public PDFTest(String file, String appname, float dpi, RectangleSize viewport, IResultsReporter reporter) {
+        this(new File(file), appname, dpi, viewport, reporter);
+    }
+
+    public PDFTest(File file, String appname, float dpi, RectangleSize viewport, IResultsReporter reporter) {
+        super(file, appname, viewport, reporter);
         this.dpi_ = dpi;
     }
+
+
+
 
     @Override
     public void run(Eyes eyes) {
         Exception ex = null;
         TestResults result = null;
+        if(this.getBatch() == null){
+          eyes.setBatch(new BatchInfo(name()));
+        } else{
+            eyes.setBatch(this.getBatch());
+        }
+
 
         try {
-            PDDocument document = PDDocument.load(file_, pdfPassword);
-            PDFRenderer pdfRenderer = new PDFRenderer(document);
-            eyes.open(appname_, name());
 
-            for (int i = 0; i < pagesList_.size(); i++) {
-                BufferedImage bim = pdfRenderer.renderImageWithDPI(pagesList_.get(i) - 1, dpi_);
-                eyes.checkImage(bim, String.format("Page-%s", pagesList_.get(i)));
+                // If all pages in the document will be a single test
+            if (!ImageTester.isPDFParallelPerPage) {
+                PDDocument document = PDDocument.load(file_, pdfPassword);
+                PDFUtilities pdfUtilities = new PDFUtilities(document,dpi_);
+                eyes.open(appname_, name(), viewportSize_);
+                pdfUtilities.checkPDF(eyes, "Page-", pages_);
+                result = eyes.close(false);
+                reporter_.onTestFinished(name(), result);
+                handleResultsDownload(result);
+                document.close();
             }
-            result = eyes.close(false);
-            printTestResults(result);
-            handleResultsDownload(result);
-            document.close();
+            else{ // If running each page in the PDF in parallel
+                PDFUtilities pdfUtilities = new PDFUtilities(file_,pdfPassword,dpi_);
+                setIncludePagesInTestName_(false);
+                pdfUtilities.checkPDFPerPage(pages_,appname_, name(), viewportSize_, eyes.getBatch());
+
+            }
+
+
+
         } catch (IOException e) {
             ex = e;
             System.out.printf("Error closing test %s \nPath: %s \nReason: %s \n", e.getMessage());
 
         } catch (Exception e) {
-            System.out.println("Oops, something went wrong!");
+            System.out.printf("Oops, something went wrong while processing the file %s! \n", file_.getName());
             System.out.print(e);
             e.printStackTrace();
         } finally {
@@ -68,6 +103,7 @@ public class PDFTest extends Test {
             eyes.abortIfNotClosed();
         }
     }
+
 
     public static boolean supports(File file) {
         return pattern.matcher(file.getName()).matches();
@@ -85,23 +121,12 @@ public class PDFTest extends Test {
         this.pdfPassword = pdfPassword;
     }
 
-    public List<Integer> setPagesList(String pages) throws IOException {
-        if (pages != null) return parsePagesToList(pages);
-        else {
-            PDDocument document = PDDocument.load(this.file_, this.pdfPassword);
-            PDFRenderer pdfRenderer = new PDFRenderer(document);
-            ArrayList<Integer> list = new ArrayList<Integer>();
-            for (int page = 0; page < document.getNumberOfPages(); ++page) {
-                list.add(page + 1);
-            }
-            return list;
-        }
-    }
 
     @Override
     public String name() {
         String pagesText = "";
-        if (pages_ != null) pagesText = " pages [" + pages_ + "]";
+        if (pages_ != null && includePagesInTestName_)
+            pagesText = " pages [" + pages_ + "]";
         return file_ == null ? name_ + pagesText : file_.getName() + pagesText;
     }
 }

@@ -1,8 +1,8 @@
-package com.applitools.ImageTester.TestObjects;
+package lib.java.com.applitools.ImageTester.TestObjects;
 
-import com.applitools.ImageTester.Interfaces.ITestable;
-import com.applitools.ImageTester.Patterns;
 import com.applitools.eyes.images.Eyes;
+import lib.java.com.applitools.ImageTester.Interfaces.ITestable;
+import lib.java.com.applitools.ImageTester.Patterns;
 
 import javax.imageio.ImageIO;
 import java.awt.image.BufferedImage;
@@ -19,9 +19,17 @@ public class ImageStep extends TestUnit {
         super(file);
     }
 
+    public void run(){
+        try {
+            run(eyes);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
     public void run(Eyes eyes) throws IOException {
         try {
-            eyes.checkImage(getImage(), name());
+                  eyes.checkImage(getImage(), name());
         } catch (IOException e) {
             System.out.printf("Failed to process image file: %s \n Reason: %s \n",
                     file_,

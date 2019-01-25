@@ -1,4 +1,4 @@
-package com.applitools.ImageTester.TestObjects;
+package lib.java.com.applitools.ImageTester.TestObjects;
 
 import com.applitools.eyes.TestResults;
 import com.applitools.eyes.images.Eyes;
@@ -31,8 +31,8 @@ public class PostscriptTest extends Test {
         renderer.setResolution(300);
         Exception ex = null;
         String res = null;
-        TestResults result=null;
-        
+        TestResults result = null;
+
         try {
             document.load(file_);
             List<Image> images = renderer.render(document);
@@ -63,7 +63,7 @@ public class PostscriptTest extends Test {
             res = "Error";
             e.printStackTrace();
         } finally {
-            printTestResults(result);
+            reporter_.onTestFinished(name(), result);
             if (ex != null) ex.printStackTrace();
             eyes.abortIfNotClosed();
         }

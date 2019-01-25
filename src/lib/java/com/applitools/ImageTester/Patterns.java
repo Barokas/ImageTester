@@ -1,4 +1,4 @@
-package com.applitools.ImageTester;
+package lib.java.com.applitools.ImageTester;
 
 import java.util.regex.Pattern;
 

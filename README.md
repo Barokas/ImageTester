@@ -1,4 +1,4 @@
-# Image Tester  [ ![Download](https://api.bintray.com/packages/yanirta/generic/ImageTester/images/download.svg) ](https://bintray.com/yanirta/generic/ImageTester/_latestVersion)
+# Image Tester [ ![Download](https://api.bintray.com/packages/applitoolseyes/generic/ImageTester/images/download.svg) ](https://bintray.com/applitoolseyes/generic/download_file?file_path=ImageTester.jar)
 ImageTester is a Cli tool to perform visual tests on images or PDF files. 
 
 If you don't have your Applitools account yet, 
@@ -61,7 +61,7 @@ The tool build in java and requires minimal set of parametersm the minimal comma
     + `-k [api-key]` - Applitools api key
 + Optional paramaeters:
     + `-f [path]` - A path to target folder or file
-    + `-a [app-name]` - Set custom application name; default = ImageTester
+    + `-a [app-name]` - Set the application name under test; default = ImageTester
     + `-p [http://proxy{;user;pass}]` - Set proxy and optional username + password
     + `-s [server]` - Set Applitools server url
     + `-ml [match-level]` - Set the comparison level, one from Strict/Content/Layout; Default = Strict
@@ -70,13 +70,14 @@ The tool build in java and requires minimal set of parametersm the minimal comma
     + `-bn [baseline]` - Set custom baseline name
     + `-vs [WidthxHeight]` - Set the viewport size identifier
     + `-lf [log-file]` - Set log fine name to enable logging
-    + `-as` - Set automatic save on failures
     + `-os [osname]` - Set custom os
-    + `-ap [app name]` - Set browser or equivalent application name  
-    ######For PDFs only
+    + `-ap [browser name]` - Set browser or equivalent hosting application name
+    + `-as` - Set automatic save on failures
+    ######For Documents (PDFs) only
     + `-di [dpi]` - Set the quality of the conversion on PDF files
     + `-sp [pages]` - Comma separated page numbers to include in PDF testing (ie: 1,2,5,7); Default all included
     + `-pp [password]` - The password if the PDF files protected
+    + `-pn` - Preserve original test names when specifying pages
  
 ## Enterprise features in combination with [Eyes Utilities](https://github.com/yanirta/EyesUtilities)
 By placing the Eyes-Utilities jar into the same folder as the ImageTester, new enterprise api features

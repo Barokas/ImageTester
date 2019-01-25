@@ -1,9 +1,11 @@
-package com.applitools.ImageTester;
+package lib.java.com.applitools.ImageTester;
 
-import com.applitools.ImageTester.Interfaces.ITestable;
-import com.applitools.ImageTester.TestObjects.*;
+
 import com.applitools.eyes.BatchInfo;
 import com.applitools.eyes.RectangleSize;
+import lib.java.com.applitools.ImageTester.Interfaces.IResultsReporter;
+import lib.java.com.applitools.ImageTester.Interfaces.ITestable;
+import lib.java.com.applitools.ImageTester.TestObjects.*;
 import org.apache.commons.io.comparator.NameFileComparator;
 
 import java.io.File;
@@ -15,16 +17,21 @@ public class SuiteBuilder {
     private String appname_;
     private RectangleSize viewport_;
     private EyesUtilitiesConfig eyesUtilitiesConfig_;
-    private float pdfdpi_;
+    private float pdfdpi_ = 250;
     private String pdfPassword_;
     private String pages_;
+    private IResultsReporter reporter_;
+    private boolean includePagesInTestName_;
+
+
 
     public String getPages() {
         return pages_;
     }
 
-    public void setPages(String steps) {
+    public void setPages(String steps, boolean includePagesInTestName) {
         this.pages_ = steps;
+        this.includePagesInTestName_ = includePagesInTestName;
     }
 
     public EyesUtilitiesConfig getEyesUtilitiesConfig() {
@@ -36,21 +43,22 @@ public class SuiteBuilder {
     }
 
 
-    public SuiteBuilder(File rootFolder, String appname, RectangleSize viewport) {
-        this.rootFolder_ = rootFolder;
+    public SuiteBuilder(String rootFolder, String appname, RectangleSize viewport, IResultsReporter reporter) {
+        this.rootFolder_ = new File(rootFolder);
         this.appname_ = appname;
         this.viewport_ = viewport;
+        this.reporter_ = reporter;
     }
 
     public ITestable build() throws IOException {
-        return build(rootFolder_, appname_, viewport_);
+        return build(rootFolder_);
     }
 
     public void setDpi(float dpi) {
         this.pdfdpi_ = dpi;
     }
 
-    private ITestable build(File curr, String appname, RectangleSize viewport) throws IOException {
+    private ITestable build(File curr) throws IOException {
         String jenkinsJobName = System.getenv("JOB_NAME");
         String jenkinsApplitoolsBatchId = System.getenv("APPLITOOLS_BATCH_ID");
         Batch jenkinsBatch = null;
@@ -58,14 +66,16 @@ public class SuiteBuilder {
         if ((jenkinsJobName != null) && (jenkinsApplitoolsBatchId != null)) {
             BatchInfo batch = new BatchInfo(jenkinsJobName);
             batch.setId(jenkinsApplitoolsBatchId);
-            jenkinsBatch = new Batch(batch);
+            jenkinsBatch = new Batch(batch, reporter_);
         }
-        ITestable unit = build(curr, appname, viewport, jenkinsBatch);
+        ITestable unit = build(curr, jenkinsBatch);
         if (unit instanceof ImageStep) {
             ImageStep step = (ImageStep) unit;
-            Test test = new Test(step.getFile(), appname);
+            Test test = new Test(step.getFile(), appname_, viewport_, reporter_);
             test.setEyesUtilitiesConfig(eyesUtilitiesConfig_);
             test.addStep(step);
+            if (step.hasRegionFile())
+                test.addSteps(step.getRegions());
             unit = test;
         }
         if (unit instanceof Test && jenkinsBatch != null) {
@@ -76,26 +86,24 @@ public class SuiteBuilder {
         }
     }
 
-    private ITestable build(File curr, String appname, RectangleSize viewport, Batch flatBatch) throws IOException {
+    private ITestable build(File curr, Batch flatBatch) throws IOException {
         if (!curr.exists()) {
             System.out.printf(String.format("The folder %s doesn't exists\n", curr.getAbsolutePath()));
             return null;
         }
 
-        if (appname == null) {
-            appname = "ImageTester";
-        }
+        if (appname_ == null) appname_ = "ImageTester";
 
         if (curr.isFile()) {
             if (PDFTest.supports(curr)) {
-                PDFTest pdftest = new PDFTest(curr, appname_, pdfdpi_);
+                PDFTest pdftest = new PDFTest(curr, appname_, pdfdpi_, viewport_, reporter_);
                 pdftest.setEyesUtilitiesConfig(eyesUtilitiesConfig_);
-                pdftest.setPages(pages_);
+                pdftest.setPages(pages_, includePagesInTestName_);
                 pdftest.setPdfPassword(pdfPassword_);
                 return pdftest;
             }
             if (PostscriptTest.supports(curr)) {
-                PostscriptTest postScriptest = new PostscriptTest(curr, appname);
+                PostscriptTest postScriptest = new PostscriptTest(curr, appname_);
                 postScriptest.setEyesUtilitiesConfig(eyesUtilitiesConfig_);
                 return postScriptest;
             }
@@ -110,9 +118,9 @@ public class SuiteBuilder {
         Arrays.sort(files, NameFileComparator.NAME_COMPARATOR);
 
         for (File file : files) {
-            ITestable unit = build(file, appname, viewport, flatBatch);
+            ITestable unit = build(file, flatBatch);
             if (unit instanceof ImageStep) {
-                if (currTest == null) currTest = new Test(curr, appname, viewport);
+                if (currTest == null) currTest = new Test(curr, appname_, viewport_, reporter_);
                 currTest.setEyesUtilitiesConfig(eyesUtilitiesConfig_);
                 ImageStep step = (ImageStep) unit;
                 if (step.hasRegionFile())
@@ -120,7 +128,7 @@ public class SuiteBuilder {
                 else
                     currTest.addStep(step);
             } else if (unit instanceof Test) {
-                if (currBatch == null) currBatch = new Batch(curr);
+                if (currBatch == null) currBatch = new Batch(curr, reporter_);
                 currBatch.addTest((Test) unit);
             } else if (flatBatch == null)
                 if (unit instanceof Batch) {
@@ -131,7 +139,7 @@ public class SuiteBuilder {
                     if (currSuite == null) currSuite = new Suite(curr);
                     suite.portBatchesTo(currSuite);
                     if (suite.hasOrphanTest()) {
-                        if (currBatch == null) currBatch = new Batch(curr);
+                        if (currBatch == null) currBatch = new Batch(curr, reporter_);
                         suite.portTestTo(currBatch);
                     }
                 } else {
