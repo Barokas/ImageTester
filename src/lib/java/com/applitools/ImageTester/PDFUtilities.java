@@ -14,6 +14,7 @@ import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.LinkedList;
 import java.util.List;
 import java.util.concurrent.ThreadFactory;
 
@@ -74,6 +75,17 @@ public class PDFUtilities {
         }
 
     }
+
+    public List<PDFPageStep> getPDFPerPage(String printPages, String AppName, String TestName, RectangleSize viewportSize, BatchInfo batch) throws IOException {
+        List<Integer> pages = setPagesList(document, printPages);
+        List<PDFPageStep> pdfPageSteps = new LinkedList<>();
+        for(Integer page:pages){
+            String testName = TestName + " page "+ page.toString();
+            pdfPageSteps.add(new PDFPageStep(file,password,(page-1),dpi, AppName, testName, viewportSize, batch));
+        }
+        return pdfPageSteps;
+    }
+
 
     public void checkPDFPerPage(String printPages, String AppName, String TestName, RectangleSize viewportSize, BatchInfo batch) throws IOException {
         List<Integer> pages = setPagesList(document, printPages);

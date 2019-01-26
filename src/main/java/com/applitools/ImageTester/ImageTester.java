@@ -19,7 +19,7 @@ import java.net.URISyntaxException;
 public class ImageTester {
 
 //    public static ParallelRunsHandler prh = new ParallelRunsHandler();
-    private static final String cur_ver = "0.4.0"; //TODO find more suitable place and logic
+    private static final String cur_ver = "0.4.1"; //TODO find more suitable place and logic
     private static final String eyes_utils = "EyesUtilities.jar";
 
     private static boolean eyes_utils_enabled = false;
@@ -31,7 +31,6 @@ public class ImageTester {
     public static int NumOfConcurentRuns = 1;
 
     public static void main(String[] args) {
-        long startTime = System.nanoTime();
 
         PrintStream out = System.out;
         eyes_utils_enabled = new File(eyes_utils).exists();
@@ -83,9 +82,7 @@ public class ImageTester {
             suite.run(eyes);
 
             parallelRunsHandler.run(NumOfConcurentRuns);
-            long endTime   = System.nanoTime();
-            long totalTime = endTime - startTime;
-            System.out.println("This is how much time it took " +totalTime);
+
 
 
         } catch (ParseException e) {

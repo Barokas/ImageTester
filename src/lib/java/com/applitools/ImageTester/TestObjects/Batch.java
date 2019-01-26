@@ -6,7 +6,9 @@ import com.applitools.eyes.images.Eyes;
 import lib.java.com.applitools.ImageTester.Interfaces.IResultsReporter;
 
 import java.io.File;
+import java.io.IOException;
 import java.util.LinkedList;
+import java.util.List;
 import java.util.Queue;
 
 public class Batch extends TestUnit {
@@ -55,8 +57,21 @@ public class Batch extends TestUnit {
 //            new Thread(test).start();
 
                 // This is the added line that isn't working
-                ImageTester.parallelRunsHandler.addRunnable(test);
+                if(test instanceof PDFTest){
+                    if(ImageTester.isPDFParallelPerPage){
+                        List<PDFPageStep> pageStepList = ((PDFTest) test).getPDFPageSteps();
+                        for( PDFPageStep step : pageStepList){
+                            ImageTester.parallelRunsHandler.addRunnable(step);
+                        }
+                    }
+                }
+                else{
+                    ImageTester.parallelRunsHandler.addRunnable(test);
+                }
 
+
+            } catch (IOException e) {
+                e.printStackTrace();
             } finally {
                 test.dispose();
             }

@@ -12,6 +12,7 @@ import org.apache.pdfbox.pdmodel.PDDocument;
 
 import java.io.File;
 import java.io.IOException;
+import java.util.List;
 import java.util.regex.Pattern;
 
 /**
@@ -54,7 +55,14 @@ public class PDFTest extends Test {
         this.dpi_ = dpi;
     }
 
-
+    public List<PDFPageStep> getPDFPageSteps() throws IOException {
+        if (ImageTester.isPDFParallelPerPage){
+            PDFUtilities pdfUtilities = new PDFUtilities(file_,pdfPassword,dpi_);
+            setIncludePagesInTestName_(false);
+            return pdfUtilities.getPDFPerPage(pages_,appname_, name(), viewportSize_, eyes.getBatch());
+        }
+        return null;
+    }
 
 
     @Override
