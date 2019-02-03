@@ -62,7 +62,8 @@ public class PDFPageStep implements Runnable{
             eyes.checkImage(bim);
             TestResults result = eyes.close(false);
             handleResultsDownload(result);
-            reporter.onTestFinished(testName, result);
+            reporter.onTestFinished("Batch: "+batch.getName()+" - "+testName, result);
+//            reporter.onTestFinished(testName, result);
             this.document.close();
         } catch (Exception e) {
             e.printStackTrace();

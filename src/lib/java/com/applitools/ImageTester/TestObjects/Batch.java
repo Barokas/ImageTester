@@ -47,14 +47,11 @@ public class Batch extends TestUnit {
     public void run(Eyes eyes) {
         batch_ = batch_ == null ? new BatchInfo(name()) : batch_;
 //        eyes.setBatch(batch_);
-        System.out.printf("Batch: %s\n", name());
+//        System.out.printf("Batch: %s\n", name());
         for (Test test : tests_) {
             try {
-//                test.run(eyes);
                 test.setEyes(ImageTester.getConfiguredEyes());
                 test.setBatch(batch_);
-//          This line is working properly
-//            new Thread(test).start();
 
                 // This is the added line that isn't working
                 if(test instanceof PDFTest){
@@ -63,10 +60,9 @@ public class Batch extends TestUnit {
                         for( PDFPageStep step : pageStepList){
                             ImageTester.parallelRunsHandler.addRunnable(step);
                         }
+                    } else {
+                        ImageTester.parallelRunsHandler.addRunnable(test);
                     }
-                }
-                else{
-                    ImageTester.parallelRunsHandler.addRunnable(test);
                 }
 
 

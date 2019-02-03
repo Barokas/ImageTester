@@ -19,7 +19,7 @@ import java.net.URISyntaxException;
 public class ImageTester {
 
 //    public static ParallelRunsHandler prh = new ParallelRunsHandler();
-    private static final String cur_ver = "0.4.1"; //TODO find more suitable place and logic
+    private static final String cur_ver = "0.4.2"; //TODO find more suitable place and logic
     private static final String eyes_utils = "EyesUtilities.jar";
 
     private static boolean eyes_utils_enabled = false;
@@ -56,6 +56,7 @@ public class ImageTester {
 
             //DPI
             builder.setDpi(Float.valueOf(cmd.getOptionValue("dpi", "250")));
+
 
             // Determine Pages to include
             if (cmd.hasOption("sp")) builder.setPages(cmd.getOptionValue("sp"), !cmd.hasOption("pn"));

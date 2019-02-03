@@ -85,7 +85,7 @@ public class PDFTest extends Test {
                 eyes.open(appname_, name(), viewportSize_);
                 pdfUtilities.checkPDF(eyes, "Page-", pages_);
                 result = eyes.close(false);
-                reporter_.onTestFinished(name(), result);
+                reporter_.onTestFinished("Batch: "+this.getBatch().getName()+" - "+name(), result);
                 handleResultsDownload(result);
                 document.close();
             }
