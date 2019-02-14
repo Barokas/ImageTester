@@ -1,4 +1,4 @@
-package com.applitools.ImageTester.Interfaces;
+package lib.java.com.applitools.ImageTester.Interfaces;
 
 /**
  * Created by yanir on 21/06/2017.

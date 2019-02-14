@@ -1,11 +1,14 @@
-package com.applitools.ImageTester.TestObjects;
+package lib.java.com.applitools.ImageTester.TestObjects;
 
-import com.applitools.ImageTester.Interfaces.IResultsReporter;
+import com.applitools.ImageTester.ImageTester;
 import com.applitools.eyes.BatchInfo;
 import com.applitools.eyes.images.Eyes;
+import lib.java.com.applitools.ImageTester.Interfaces.IResultsReporter;
 
 import java.io.File;
+import java.io.IOException;
 import java.util.LinkedList;
+import java.util.List;
 import java.util.Queue;
 
 public class Batch extends TestUnit {
@@ -24,13 +27,47 @@ public class Batch extends TestUnit {
         reporter_ = reporter;
     }
 
+    // Original
+
+//    public void run(Eyes eyes) {
+//        batch_ = batch_ == null ? new BatchInfo(name()) : batch_;
+//        eyes.setBatch(batch_);
+//        System.out.printf("Batch: %s\n", name());
+//        for (Test test : tests_) {
+//            try {
+//                test.run(eyes);
+//            } finally {
+//                test.dispose();
+//            }
+//        }
+//        reporter_.onBatchFinished(batch_.getName());
+//        eyes.setBatch(null);
+//    }
+
     public void run(Eyes eyes) {
         batch_ = batch_ == null ? new BatchInfo(name()) : batch_;
-        eyes.setBatch(batch_);
-        System.out.printf("Batch: %s\n", name());
+//        eyes.setBatch(batch_);
+//        System.out.printf("Batch: %s\n", name());
         for (Test test : tests_) {
             try {
-                test.run(eyes);
+                test.setEyes(ImageTester.getConfiguredEyes());
+                test.setBatch(batch_);
+
+                // This is the added line that isn't working
+                if(test instanceof PDFTest){
+                    if(ImageTester.isPDFParallelPerPage){
+                        List<PDFPageStep> pageStepList = ((PDFTest) test).getPDFPageSteps();
+                        for( PDFPageStep step : pageStepList){
+                            ImageTester.parallelRunsHandler.addRunnable(step);
+                        }
+                    } else {
+                        ImageTester.parallelRunsHandler.addRunnable(test);
+                    }
+                }
+
+
+            } catch (IOException e) {
+                e.printStackTrace();
             } finally {
                 test.dispose();
             }
@@ -48,5 +85,10 @@ public class Batch extends TestUnit {
         for (Test test : tests_) {
             test.dispose();
         }
+    }
+
+    @Override
+    public void run() {
+        run(eyes);
     }
 }

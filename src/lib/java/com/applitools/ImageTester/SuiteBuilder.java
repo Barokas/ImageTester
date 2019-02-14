@@ -1,10 +1,10 @@
-package com.applitools.ImageTester;
+package lib.java.com.applitools.ImageTester;
 
-import com.applitools.ImageTester.Interfaces.IResultsReporter;
-import com.applitools.ImageTester.Interfaces.ITestable;
-import com.applitools.ImageTester.TestObjects.*;
 import com.applitools.eyes.BatchInfo;
 import com.applitools.eyes.RectangleSize;
+import lib.java.com.applitools.ImageTester.Interfaces.IResultsReporter;
+import lib.java.com.applitools.ImageTester.Interfaces.ITestable;
+import lib.java.com.applitools.ImageTester.TestObjects.*;
 import org.apache.commons.io.comparator.NameFileComparator;
 
 import java.io.File;
@@ -21,7 +21,6 @@ public class SuiteBuilder {
     private String pages_;
     private IResultsReporter reporter_;
     private boolean includePagesInTestName_;
-
     public String getPages() {
         return pages_;
     }

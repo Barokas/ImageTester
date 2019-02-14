@@ -1,6 +1,7 @@
-package com.applitools.ImageTester.TestObjects;
+package lib.java.com.applitools.ImageTester.TestObjects;
 
-import com.applitools.ImageTester.Interfaces.ITestable;
+
+import lib.java.com.applitools.ImageTester.Interfaces.ITestable;
 import com.applitools.eyes.Region;
 import com.applitools.eyes.images.Eyes;
 import com.opencsv.CSVReader;

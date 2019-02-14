@@ -1,8 +1,9 @@
-package com.applitools.ImageTester.TestObjects;
+package lib.java.com.applitools.ImageTester.TestObjects;
 
 import com.applitools.Commands.AnimatedDiffs;
 import com.applitools.Commands.DownloadDiffs;
 import com.applitools.Commands.DownloadImages;
+import com.applitools.eyes.BatchInfo;
 import com.applitools.ImageTester.EyesUtilitiesConfig;
 import com.applitools.ImageTester.Interfaces.IDisposable;
 import com.applitools.ImageTester.Interfaces.IResultsReporter;
@@ -12,6 +13,11 @@ import com.applitools.eyes.EyesException;
 import com.applitools.eyes.RectangleSize;
 import com.applitools.eyes.TestResults;
 import com.applitools.eyes.images.Eyes;
+import lib.java.com.applitools.ImageTester.EyesUtilitiesConfig;
+import lib.java.com.applitools.ImageTester.Interfaces.IDisposable;
+import lib.java.com.applitools.ImageTester.Interfaces.IResultsReporter;
+import lib.java.com.applitools.ImageTester.Interfaces.ITestable;
+import lib.java.com.applitools.ImageTester.StdoutReporter;
 
 import java.io.File;
 import java.util.*;
@@ -23,6 +29,8 @@ public class Test extends TestUnit {
     protected IResultsReporter reporter_;
     private Queue<ITestable> steps_;
     private EyesUtilitiesConfig eyesUtilitiesConfig_;
+    private BatchInfo batch;
+
 
 
     public Test(File file, String appname) {
@@ -39,6 +47,9 @@ public class Test extends TestUnit {
         appname_ = appname;
         viewportSize_ = viewportSize;
         reporter_ = (reporter == null) ? new StdoutReporter("\t[%s] - %s\n") : reporter;
+    }
+    public void run(){
+        run(eyes);
     }
 
     public void run(Eyes eyes) {
@@ -71,7 +82,7 @@ public class Test extends TestUnit {
                 System.out.printf("Aborted!");
             } catch (Throwable ex) {
                 System.out.printf("Error while aborting: %s", ex.getMessage());
-                System.out.println("I don't have any idea what just happened.");
+//                System.out.println("I don't have any idea what just happened.");
                 System.out.println("Please try reaching our support at support@applitools.com");
             }
         } catch (Exception e) {
@@ -107,35 +118,21 @@ public class Test extends TestUnit {
         eyesUtilitiesConfig_ = eyesUtilitiesConfig;
     }
 
-    protected static List<Integer> parsePagesToList(String input) {
-        if (input == null) return null;
-        ArrayList<Integer> pagesToInclude = new ArrayList<Integer>();
-        String[] inputPages = input.split(",");
-        for (int i = 0; i < inputPages.length; i++) {
-            if (inputPages[i].contains("-")) {
-                int left = Integer.valueOf(inputPages[i].split("-")[0]);
-                int right = Integer.valueOf(inputPages[i].split("-")[1]);
-                if (left <= right) {
-                    for (int j = left; j <= right; j++) {
-                        pagesToInclude.add(j);
-                    }
-                } else {
-                    for (int j = left; j >= right; j--) {
-                        pagesToInclude.add(j);
-                    }
-                }
-            } else {
-                pagesToInclude.add(Integer.valueOf(inputPages[i]));
-            }
-        }
-        return pagesToInclude;
 
-    }
 
     public void dispose() {
         if (steps_ == null) return;
         for (ITestable step : steps_) {
             if (step instanceof IDisposable) ((IDisposable) step).dispose();
         }
+    }
+
+    public void setBatch(BatchInfo batch) {
+        this.batch = batch;
+        eyes.setBatch(batch);
+    }
+
+    public BatchInfo getBatch() {
+        return batch;
     }
 }

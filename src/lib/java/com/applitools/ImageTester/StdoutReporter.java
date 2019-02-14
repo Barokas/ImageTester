@@ -1,7 +1,7 @@
-package com.applitools.ImageTester;
+package lib.java.com.applitools.ImageTester;
 
-import com.applitools.ImageTester.Interfaces.IResultsReporter;
 import com.applitools.eyes.TestResults;
+import lib.java.com.applitools.ImageTester.Interfaces.IResultsReporter;
 
 public class StdoutReporter implements IResultsReporter {
 

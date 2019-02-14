@@ -1,6 +1,7 @@
-package com.applitools.ImageTester.TestObjects;
+package lib.java.com.applitools.ImageTester.TestObjects;
 
 
+import com.applitools.ImageTester.ImageTester;
 import com.applitools.eyes.images.Eyes;
 
 import java.io.File;
@@ -17,6 +18,14 @@ public class Suite extends TestUnit {
         batches_ = new LinkedList<Batch>();
     }
 
+    public void run(){
+        try {
+            run(eyes);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
     public void run(Eyes eyes) throws IOException {
         if (batches_.isEmpty() && test_ == null) {
             System.out.printf("Nothing to test!\n");
@@ -25,7 +34,10 @@ public class Suite extends TestUnit {
 
         for (Batch batch : batches_) {
             try {
-                batch.run(eyes);
+                batch.setEyes(ImageTester.getConfiguredEyes());
+                ImageTester.parallelRunsHandler.addRunnable(new Thread(batch));
+//                new Thread(batch).start();
+//                batch.run(eyes);
             }finally {
                 batch.dispose();
             }

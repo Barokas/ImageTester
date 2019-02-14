@@ -1,4 +1,4 @@
-package com.applitools.ImageTester;
+package lib.java.com.applitools.ImageTester;
 
 /**
  * Created by yanir on 23/04/2016.

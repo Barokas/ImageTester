@@ -1,4 +1,4 @@
-package com.applitools.ImageTester.Interfaces;
+package lib.java.com.applitools.ImageTester.Interfaces;
 
 import com.applitools.eyes.TestResults;
 

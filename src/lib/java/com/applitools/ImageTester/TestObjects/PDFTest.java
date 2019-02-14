@@ -1,17 +1,17 @@
-package com.applitools.ImageTester.TestObjects;
+package lib.java.com.applitools.ImageTester.TestObjects;
 
-import com.applitools.ImageTester.Interfaces.IResultsReporter;
-import com.applitools.ImageTester.Patterns;
+import com.applitools.ImageTester.ImageTester;
+import com.applitools.eyes.BatchInfo;
 import com.applitools.eyes.RectangleSize;
 import com.applitools.eyes.TestResults;
 import com.applitools.eyes.images.Eyes;
+import lib.java.com.applitools.ImageTester.Interfaces.IResultsReporter;
+import lib.java.com.applitools.ImageTester.PDFUtilities;
+import lib.java.com.applitools.ImageTester.Patterns;
 import org.apache.pdfbox.pdmodel.PDDocument;
-import org.apache.pdfbox.rendering.PDFRenderer;
 
-import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
-import java.util.ArrayList;
 import java.util.List;
 import java.util.regex.Pattern;
 
@@ -25,12 +25,16 @@ public class PDFTest extends Test {
     private String pages_;
     private boolean includePagesInTestName_;
 
+    public void setIncludePagesInTestName_(boolean includePagesInTestName){
+        this.includePagesInTestName_=includePagesInTestName;
+    }
+
     public void setPages(String pages, boolean includePagesInTestName) throws IOException {
         this.pages_ = pages;
         this.includePagesInTestName_ = includePagesInTestName;
     }
 
-    protected PDFTest(File file, String appname) {
+    public PDFTest(File file, String appname) {
         this(file, appname, 300f, null);
     }
 
@@ -51,26 +55,44 @@ public class PDFTest extends Test {
         this.dpi_ = dpi;
     }
 
+    public List<PDFPageStep> getPDFPageSteps() throws IOException {
+        if (ImageTester.isPDFParallelPerPage){
+            PDFUtilities pdfUtilities = new PDFUtilities(file_,pdfPassword,dpi_);
+            setIncludePagesInTestName_(false);
+            return pdfUtilities.getPDFPerPage(pages_,appname_, name(), viewportSize_, eyes.getBatch());
+        }
+        return null;
+    }
+
+
     @Override
     public void run(Eyes eyes) {
         Exception ex = null;
         TestResults result = null;
-
+        if(this.getBatch() == null){
+          eyes.setBatch(new BatchInfo(name()));
+        } else{
+            eyes.setBatch(this.getBatch());
+        }
 
         try {
-            PDDocument document = PDDocument.load(file_, pdfPassword);
-            PDFRenderer pdfRenderer = new PDFRenderer(document);
-            List<Integer> pagesList_ = setPagesList(document, pages_);
-
-            eyes.open(appname_, name(), viewportSize_);
-            for (int i = 0; i < pagesList_.size(); i++) {
-                BufferedImage bim = pdfRenderer.renderImageWithDPI(pagesList_.get(i) - 1, dpi_);
-                eyes.checkImage(bim, String.format("Page-%s", pagesList_.get(i)));
+                // If all pages in the document will be a single test
+            if (!ImageTester.isPDFParallelPerPage) {
+                PDDocument document = PDDocument.load(file_, pdfPassword);
+                PDFUtilities pdfUtilities = new PDFUtilities(document,dpi_);
+                eyes.open(appname_, name(), viewportSize_);
+                pdfUtilities.checkPDF(eyes, "Page-", pages_);
+                result = eyes.close(false);
+                reporter_.onTestFinished("Batch: "+this.getBatch().getName()+" - "+name(), result);
+                handleResultsDownload(result);
+                document.close();
             }
-            result = eyes.close(false);
-            reporter_.onTestFinished(name(), result);
-            handleResultsDownload(result);
-            document.close();
+            else{ // If running each page in the PDF in parallel
+                PDFUtilities pdfUtilities = new PDFUtilities(file_,pdfPassword,dpi_);
+                setIncludePagesInTestName_(false);
+                pdfUtilities.checkPDFPerPage(pages_,appname_, name(), viewportSize_, eyes.getBatch());
+
+            }
         } catch (IOException e) {
             ex = e;
             System.out.printf("Error closing test %s \nPath: %s \nReason: %s \n", e.getMessage());
@@ -84,6 +106,7 @@ public class PDFTest extends Test {
             eyes.abortIfNotClosed();
         }
     }
+
 
     public static boolean supports(File file) {
         return pattern.matcher(file.getName()).matches();
