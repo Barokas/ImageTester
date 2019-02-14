@@ -1,6 +1,6 @@
 .idea/
 out/
+classes/
 EyesUtilities.jar
 *.iml
 target/
-src/test/Unit1

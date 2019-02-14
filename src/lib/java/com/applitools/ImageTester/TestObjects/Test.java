@@ -4,6 +4,11 @@ import com.applitools.Commands.AnimatedDiffs;
 import com.applitools.Commands.DownloadDiffs;
 import com.applitools.Commands.DownloadImages;
 import com.applitools.eyes.BatchInfo;
+import com.applitools.ImageTester.EyesUtilitiesConfig;
+import com.applitools.ImageTester.Interfaces.IDisposable;
+import com.applitools.ImageTester.Interfaces.IResultsReporter;
+import com.applitools.ImageTester.Interfaces.ITestable;
+import com.applitools.ImageTester.StdoutReporter;
 import com.applitools.eyes.EyesException;
 import com.applitools.eyes.RectangleSize;
 import com.applitools.eyes.TestResults;
@@ -43,8 +48,6 @@ public class Test extends TestUnit {
         viewportSize_ = viewportSize;
         reporter_ = (reporter == null) ? new StdoutReporter("\t[%s] - %s\n") : reporter;
     }
-
-
     public void run(){
         run(eyes);
     }

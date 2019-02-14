@@ -1,6 +1,5 @@
 package lib.java.com.applitools.ImageTester;
 
-
 import com.applitools.eyes.BatchInfo;
 import com.applitools.eyes.RectangleSize;
 import lib.java.com.applitools.ImageTester.Interfaces.IResultsReporter;
@@ -22,9 +21,6 @@ public class SuiteBuilder {
     private String pages_;
     private IResultsReporter reporter_;
     private boolean includePagesInTestName_;
-
-
-
     public String getPages() {
         return pages_;
     }

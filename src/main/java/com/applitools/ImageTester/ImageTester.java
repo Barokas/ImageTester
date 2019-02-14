@@ -17,7 +17,6 @@ import java.net.URI;
 import java.net.URISyntaxException;
 
 public class ImageTester {
-
 //    public static ParallelRunsHandler prh = new ParallelRunsHandler();
     private static final String cur_ver = "0.4.2"; //TODO find more suitable place and logic
     private static final String eyes_utils = "EyesUtilities.jar";
@@ -43,7 +42,28 @@ public class ImageTester {
 
         try {
             cmd = parser.parse(options, args);
-            Eyes eyes =getConfiguredEyes();
+            Eyes eyes = new Eyes() {
+                @Override
+                public String getBaseAgentId() {
+                    return String.format("ImageTester/%s [%s]", cur_ver, super.getBaseAgentId());
+                }
+            };
+            //API key
+            eyes.setApiKey(cmd.getOptionValue("k"));
+            // Applitools Server url
+            if (cmd.hasOption("s")) eyes.setServerUrl(new URI(cmd.getOptionValue("s")));
+            // Match level
+            if (cmd.hasOption("ml")) eyes.setMatchLevel(Utils.parseEnum(MatchLevel.class, cmd.getOptionValue("ml")));
+            // Proxy
+            if (cmd.hasOption("p")) {
+                String[] proxyops = cmd.getOptionValues("p");
+                if (proxyops.length == 1)
+                    eyes.setProxy(new ProxySettings(proxyops[0]));
+                else if (proxyops.length == 3) {
+                    eyes.setProxy(new ProxySettings(proxyops[0], proxyops[1], proxyops[2]));
+                } else
+                    throw new ParseException("Proxy setting are invalid");
+            }
 
             // Folder path
             File root = new File(cmd.getOptionValue("f", "."));
@@ -57,23 +77,19 @@ public class ImageTester {
             //DPI
             builder.setDpi(Float.valueOf(cmd.getOptionValue("dpi", "250")));
 
-
             // Determine Pages to include
             if (cmd.hasOption("sp")) builder.setPages(cmd.getOptionValue("sp"), !cmd.hasOption("pn"));
 
             // Read PDF Password
             if (cmd.hasOption("pp")) builder.setPdfPassword(cmd.getOptionValue("pp"));
 
-            if (eyes_utils_enabled) {
-                eyesUtilitiesConfig = new EyesUtilitiesConfig(cmd);
-                builder.setEyesUtilitiesConfig(eyesUtilitiesConfig);
-            }
-
             // Read is to split pdfs per page
             isPDFParallelPerPage=cmd.hasOption("pl");
 
             // Read number of allowed Threads
             if (cmd.hasOption("cr")) NumOfConcurentRuns= Integer.parseInt(cmd.getOptionValue("cr"));
+
+            if (eyes_utils_enabled) builder.setEyesUtilitiesConfig(new EyesUtilitiesConfig(cmd));
 
             ITestable suite = builder.build();
             if (suite == null) {

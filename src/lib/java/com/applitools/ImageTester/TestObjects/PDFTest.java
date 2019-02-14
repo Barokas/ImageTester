@@ -75,9 +75,7 @@ public class PDFTest extends Test {
             eyes.setBatch(this.getBatch());
         }
 
-
         try {
-
                 // If all pages in the document will be a single test
             if (!ImageTester.isPDFParallelPerPage) {
                 PDDocument document = PDDocument.load(file_, pdfPassword);
@@ -95,9 +93,6 @@ public class PDFTest extends Test {
                 pdfUtilities.checkPDFPerPage(pages_,appname_, name(), viewportSize_, eyes.getBatch());
 
             }
-
-
-
         } catch (IOException e) {
             ex = e;
             System.out.printf("Error closing test %s \nPath: %s \nReason: %s \n", e.getMessage());
@@ -129,6 +124,16 @@ public class PDFTest extends Test {
         this.pdfPassword = pdfPassword;
     }
 
+    public List<Integer> setPagesList(PDDocument document, String pages) throws IOException {
+        if (pages != null) return parsePagesToList(pages);
+        else {
+            ArrayList<Integer> list = new ArrayList<Integer>();
+            for (int page = 0; page < document.getNumberOfPages(); ++page) {
+                list.add(page + 1);
+            }
+            return list;
+        }
+    }
 
     @Override
     public String name() {
