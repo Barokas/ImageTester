@@ -1,4 +1,4 @@
-package lib.java.com.applitools.ImageTester;
+package com.applitools.ImageTester;
 
 import org.apache.commons.cli.CommandLine;
 import org.apache.commons.cli.ParseException;
@@ -28,7 +28,7 @@ public class EyesUtilitiesConfig {
             if (!cmd.hasOption("vk"))
                 throw new ParseException("gd|gi|gg must be called with enterprise view-key (vk)");
             viewKey_ = cmd.getOptionValue("vk");
-            destinationFolder_ = cmd.getOptionValue("of", "./");
+            destinationFolder_ = cmd.getOptionValue("of");
             downloadDiffs_ = cmd.hasOption("gd");
             getImages_ = cmd.hasOption("gi");
             getGifs_ = cmd.hasOption("gg");

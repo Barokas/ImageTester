@@ -1,9 +1,9 @@
-package lib.java.com.applitools.ImageTester.TestObjects;
+package com.applitools.ImageTester.TestObjects;
 
 import com.applitools.ImageTester.ImageTester;
 import com.applitools.eyes.BatchInfo;
 import com.applitools.eyes.images.Eyes;
-import lib.java.com.applitools.ImageTester.Interfaces.IResultsReporter;
+import com.applitools.ImageTester.Interfaces.IResultsReporter;
 
 import java.io.File;
 import java.io.IOException;
@@ -54,16 +54,21 @@ public class Batch extends TestUnit {
                 test.setBatch(batch_);
 
                 // This is the added line that isn't working
-                if(test instanceof PDFTest){
-                    if(ImageTester.isPDFParallelPerPage){
+                if(test instanceof PDFTest) {
+                    if (ImageTester.isPDFParallelPerPage) {
                         List<PDFPageStep> pageStepList = ((PDFTest) test).getPDFPageSteps();
-                        for( PDFPageStep step : pageStepList){
+                        for (PDFPageStep step : pageStepList) {
                             ImageTester.parallelRunsHandler.addRunnable(step);
                         }
                     } else {
                         ImageTester.parallelRunsHandler.addRunnable(test);
                     }
                 }
+                // in case it is not a PDF Test
+                else{
+                    test.run(eyes);
+                }
+
 
 
             } catch (IOException e) {

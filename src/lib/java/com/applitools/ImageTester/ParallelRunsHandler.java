@@ -1,4 +1,4 @@
-package lib.java.com.applitools.ImageTester;
+package com.applitools.ImageTester;
 import java.util.LinkedList;
 import java.util.Queue;
 

@@ -1,4 +1,4 @@
-package lib.java.com.applitools.ImageTester.TestObjects;
+package com.applitools.ImageTester.TestObjects;
 
 
 import com.applitools.ImageTester.ImageTester;

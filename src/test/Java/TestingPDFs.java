@@ -1,6 +1,6 @@
-import lib.java.com.applitools.ImageTester.Interfaces.*;
-import lib.java.com.applitools.ImageTester.SuiteBuilder;
-import lib.java.com.applitools.ImageTester.TestObjects.PDFTest;
+import com.applitools.ImageTester.Interfaces.*;
+import com.applitools.ImageTester.SuiteBuilder;
+import com.applitools.ImageTester.TestObjects.PDFTest;
 import com.applitools.eyes.TestResults;
 import org.junit.Assert;
 import org.junit.Test;

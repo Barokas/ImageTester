@@ -1,23 +1,18 @@
-package lib.java.com.applitools.ImageTester.TestObjects;
+package com.applitools.ImageTester.TestObjects;
 
 import com.applitools.Commands.AnimatedDiffs;
 import com.applitools.Commands.DownloadDiffs;
 import com.applitools.Commands.DownloadImages;
 import com.applitools.eyes.BatchInfo;
+import com.applitools.eyes.EyesException;
+import com.applitools.eyes.RectangleSize;
+import com.applitools.eyes.TestResults;
+import com.applitools.eyes.images.Eyes;
 import com.applitools.ImageTester.EyesUtilitiesConfig;
 import com.applitools.ImageTester.Interfaces.IDisposable;
 import com.applitools.ImageTester.Interfaces.IResultsReporter;
 import com.applitools.ImageTester.Interfaces.ITestable;
 import com.applitools.ImageTester.StdoutReporter;
-import com.applitools.eyes.EyesException;
-import com.applitools.eyes.RectangleSize;
-import com.applitools.eyes.TestResults;
-import com.applitools.eyes.images.Eyes;
-import lib.java.com.applitools.ImageTester.EyesUtilitiesConfig;
-import lib.java.com.applitools.ImageTester.Interfaces.IDisposable;
-import lib.java.com.applitools.ImageTester.Interfaces.IResultsReporter;
-import lib.java.com.applitools.ImageTester.Interfaces.ITestable;
-import lib.java.com.applitools.ImageTester.StdoutReporter;
 
 import java.io.File;
 import java.util.*;
@@ -48,12 +43,15 @@ public class Test extends TestUnit {
         viewportSize_ = viewportSize;
         reporter_ = (reporter == null) ? new StdoutReporter("\t[%s] - %s\n") : reporter;
     }
+
+
     public void run(){
         run(eyes);
     }
 
     public void run(Eyes eyes) {
         eyes.open(appname_, name(), viewportSize_);
+
         for (ITestable step : steps_) {
             try {
                 step.run(eyes);
@@ -127,12 +125,11 @@ public class Test extends TestUnit {
         }
     }
 
-    public void setBatch(BatchInfo batch) {
-        this.batch = batch;
-        eyes.setBatch(batch);
+    public void setBatch(BatchInfo batchInfo) {
+        this.batch = batchInfo;
     }
 
     public BatchInfo getBatch() {
-        return batch;
+        return this.batch;
     }
 }

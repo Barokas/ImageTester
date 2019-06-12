@@ -1,13 +1,13 @@
-package lib.java.com.applitools.ImageTester.TestObjects;
+package com.applitools.ImageTester.TestObjects;
 
 import com.applitools.ImageTester.ImageTester;
 import com.applitools.eyes.BatchInfo;
 import com.applitools.eyes.RectangleSize;
 import com.applitools.eyes.TestResults;
 import com.applitools.eyes.images.Eyes;
-import lib.java.com.applitools.ImageTester.Interfaces.IResultsReporter;
-import lib.java.com.applitools.ImageTester.PDFUtilities;
-import lib.java.com.applitools.ImageTester.Patterns;
+import com.applitools.ImageTester.Interfaces.IResultsReporter;
+import com.applitools.ImageTester.PDFUtilities;
+import com.applitools.ImageTester.Patterns;
 import org.apache.pdfbox.pdmodel.PDDocument;
 
 import java.io.File;
@@ -59,7 +59,7 @@ public class PDFTest extends Test {
         if (ImageTester.isPDFParallelPerPage){
             PDFUtilities pdfUtilities = new PDFUtilities(file_,pdfPassword,dpi_);
             setIncludePagesInTestName_(false);
-            return pdfUtilities.getPDFPerPage(pages_,appname_, name(), viewportSize_, eyes.getBatch());
+            return pdfUtilities.getPDFPerPage(pages_,appname_, name(), viewportSize_, this.getBatch());
         }
         return null;
     }
@@ -70,12 +70,16 @@ public class PDFTest extends Test {
         Exception ex = null;
         TestResults result = null;
         if(this.getBatch() == null){
-          eyes.setBatch(new BatchInfo(name()));
+            BatchInfo batchInfo = new BatchInfo(name());
+            this.setBatch(batchInfo);
+
         } else{
             eyes.setBatch(this.getBatch());
         }
 
+
         try {
+
                 // If all pages in the document will be a single test
             if (!ImageTester.isPDFParallelPerPage) {
                 PDDocument document = PDDocument.load(file_, pdfPassword);
@@ -90,9 +94,10 @@ public class PDFTest extends Test {
             else{ // If running each page in the PDF in parallel
                 PDFUtilities pdfUtilities = new PDFUtilities(file_,pdfPassword,dpi_);
                 setIncludePagesInTestName_(false);
-                pdfUtilities.checkPDFPerPage(pages_,appname_, name(), viewportSize_, eyes.getBatch());
+                pdfUtilities.checkPDFPerPage(pages_,appname_, name(), viewportSize_, this.getBatch());
 
             }
+
         } catch (IOException e) {
             ex = e;
             System.out.printf("Error closing test %s \nPath: %s \nReason: %s \n", e.getMessage());
@@ -101,6 +106,8 @@ public class PDFTest extends Test {
             System.out.printf("Oops, something went wrong while processing the file %s! \n", file_.getName());
             System.out.print(e);
             e.printStackTrace();
+
+            ex = e;
         } finally {
             if (ex != null) ex.printStackTrace();
             eyes.abortIfNotClosed();
@@ -124,16 +131,6 @@ public class PDFTest extends Test {
         this.pdfPassword = pdfPassword;
     }
 
-    public List<Integer> setPagesList(PDDocument document, String pages) throws IOException {
-        if (pages != null) return parsePagesToList(pages);
-        else {
-            ArrayList<Integer> list = new ArrayList<Integer>();
-            for (int page = 0; page < document.getNumberOfPages(); ++page) {
-                list.add(page + 1);
-            }
-            return list;
-        }
-    }
 
     @Override
     public String name() {

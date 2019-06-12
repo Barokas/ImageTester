@@ -1,8 +1,8 @@
-package lib.java.com.applitools.ImageTester.TestObjects;
+package com.applitools.ImageTester.TestObjects;
 
 import com.applitools.eyes.images.Eyes;
-import lib.java.com.applitools.ImageTester.Interfaces.ITestable;
-import lib.java.com.applitools.ImageTester.Patterns;
+import com.applitools.ImageTester.Interfaces.ITestable;
+import com.applitools.ImageTester.Patterns;
 
 import javax.imageio.ImageIO;
 import java.awt.image.BufferedImage;

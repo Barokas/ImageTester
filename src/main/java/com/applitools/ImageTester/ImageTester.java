@@ -3,10 +3,10 @@ package com.applitools.ImageTester;
 import com.applitools.Commands.AnimatedDiffs;
 import com.applitools.Commands.DownloadDiffs;
 import com.applitools.Commands.DownloadImages;
+import com.applitools.ImageTester.Interfaces.ITestable;
 import com.applitools.eyes.*;
 import com.applitools.eyes.images.Eyes;
-import lib.java.com.applitools.ImageTester.*;
-import lib.java.com.applitools.ImageTester.Interfaces.ITestable;
+
 import org.apache.commons.cli.*;
 import org.apache.log4j.*;
 
@@ -17,8 +17,8 @@ import java.net.URI;
 import java.net.URISyntaxException;
 
 public class ImageTester {
-//    public static ParallelRunsHandler prh = new ParallelRunsHandler();
-    private static final String cur_ver = "0.4.2"; //TODO find more suitable place and logic
+
+    private static final String cur_ver = "0.4.8";
     private static final String eyes_utils = "EyesUtilities.jar";
 
     private static boolean eyes_utils_enabled = false;
@@ -32,9 +32,11 @@ public class ImageTester {
     public static void main(String[] args) {
 
         PrintStream out = System.out;
-        eyes_utils_enabled = new File(eyes_utils).exists();
+        String isDev = System.getenv("IMAGE_TESTER_DEV");
+        eyes_utils_enabled = new File(eyes_utils).exists() || (!(isDev == null || isDev.length() == 0));
         CommandLineParser parser = new DefaultParser();
         Options options = getOptions();
+
 
 
         // This part disables log4j warnings
@@ -42,28 +44,14 @@ public class ImageTester {
 
         try {
             cmd = parser.parse(options, args);
-            Eyes eyes = new Eyes() {
-                @Override
-                public String getBaseAgentId() {
-                    return String.format("ImageTester/%s [%s]", cur_ver, super.getBaseAgentId());
-                }
-            };
-            //API key
-            eyes.setApiKey(cmd.getOptionValue("k"));
-            // Applitools Server url
-            if (cmd.hasOption("s")) eyes.setServerUrl(new URI(cmd.getOptionValue("s")));
-            // Match level
-            if (cmd.hasOption("ml")) eyes.setMatchLevel(Utils.parseEnum(MatchLevel.class, cmd.getOptionValue("ml")));
-            // Proxy
-            if (cmd.hasOption("p")) {
-                String[] proxyops = cmd.getOptionValues("p");
-                if (proxyops.length == 1)
-                    eyes.setProxy(new ProxySettings(proxyops[0]));
-                else if (proxyops.length == 3) {
-                    eyes.setProxy(new ProxySettings(proxyops[0], proxyops[1], proxyops[2]));
-                } else
-                    throw new ParseException("Proxy setting are invalid");
+
+            // Check for version
+            if (cmd.hasOption("v")) {
+                System.out.println(cur_ver);
+                return;
             }
+
+            Eyes eyes =getConfiguredEyes();
 
             // Folder path
             File root = new File(cmd.getOptionValue("f", "."));
@@ -74,8 +62,11 @@ public class ImageTester {
                     getVieportSize(cmd),
                     new StdoutReporter("\t[%s] - %s\n"));
 
+
+
             //DPI
             builder.setDpi(Float.valueOf(cmd.getOptionValue("dpi", "250")));
+
 
             // Determine Pages to include
             if (cmd.hasOption("sp")) builder.setPages(cmd.getOptionValue("sp"), !cmd.hasOption("pn"));
@@ -83,13 +74,16 @@ public class ImageTester {
             // Read PDF Password
             if (cmd.hasOption("pp")) builder.setPdfPassword(cmd.getOptionValue("pp"));
 
+            if (eyes_utils_enabled) {
+                eyesUtilitiesConfig = new EyesUtilitiesConfig(cmd);
+                builder.setEyesUtilitiesConfig(eyesUtilitiesConfig);
+            }
+
             // Read is to split pdfs per page
             isPDFParallelPerPage=cmd.hasOption("pl");
 
             // Read number of allowed Threads
             if (cmd.hasOption("cr")) NumOfConcurentRuns= Integer.parseInt(cmd.getOptionValue("cr"));
-
-            if (eyes_utils_enabled) builder.setEyesUtilitiesConfig(new EyesUtilitiesConfig(cmd));
 
             ITestable suite = builder.build();
             if (suite == null) {
@@ -117,10 +111,14 @@ public class ImageTester {
     private static Options getOptions() {
         Options options = new Options();
 
+        options.addOption(Option.builder("v")
+                .desc("ImageTester Version")
+                .longOpt("Version")
+                .build());
+
         options.addOption(Option.builder("k")
                 .longOpt("apiKey")
                 .desc("Applitools api key")
-                .required()
                 .hasArg().argName("apikey")
                 .build());
 

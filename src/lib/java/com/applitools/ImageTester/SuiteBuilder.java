@@ -1,10 +1,11 @@
-package lib.java.com.applitools.ImageTester;
+package com.applitools.ImageTester;
+
 
 import com.applitools.eyes.BatchInfo;
 import com.applitools.eyes.RectangleSize;
-import lib.java.com.applitools.ImageTester.Interfaces.IResultsReporter;
-import lib.java.com.applitools.ImageTester.Interfaces.ITestable;
-import lib.java.com.applitools.ImageTester.TestObjects.*;
+import com.applitools.ImageTester.Interfaces.IResultsReporter;
+import com.applitools.ImageTester.Interfaces.ITestable;
+import com.applitools.ImageTester.TestObjects.*;
 import org.apache.commons.io.comparator.NameFileComparator;
 
 import java.io.File;

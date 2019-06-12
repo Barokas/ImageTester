@@ -1,13 +1,13 @@
-package lib.java.com.applitools.ImageTester.TestObjects;
+package com.applitools.ImageTester.TestObjects;
 
 import com.applitools.ImageTester.ImageTester;
 import com.applitools.eyes.BatchInfo;
 import com.applitools.eyes.RectangleSize;
 import com.applitools.eyes.TestResults;
 import com.applitools.eyes.images.Eyes;
-import lib.java.com.applitools.ImageTester.Interfaces.ITestable;
-import lib.java.com.applitools.ImageTester.Patterns;
-import lib.java.com.applitools.ImageTester.StdoutReporter;
+import com.applitools.ImageTester.Interfaces.ITestable;
+import com.applitools.ImageTester.Patterns;
+import com.applitools.ImageTester.StdoutReporter;
 import org.apache.pdfbox.pdmodel.PDDocument;
 import org.apache.pdfbox.rendering.PDFRenderer;
 
@@ -62,7 +62,7 @@ public class PDFPageStep implements Runnable{
             eyes.checkImage(bim);
             TestResults result = eyes.close(false);
             handleResultsDownload(result);
-            reporter.onTestFinished("Batch: "+batch.getName()+" - "+testName, result);
+             reporter.onTestFinished("Batch: "+this.eyes.getBatch().getName()+" - "+testName, result);
 //            reporter.onTestFinished(testName, result);
             this.document.close();
         } catch (Exception e) {

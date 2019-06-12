@@ -1,12 +1,11 @@
-package lib.java.com.applitools.ImageTester;
+package com.applitools.ImageTester;
 
 import com.applitools.ImageTester.ImageTester;
 import com.applitools.eyes.BatchInfo;
 import com.applitools.eyes.RectangleSize;
 import com.applitools.eyes.images.Eyes;
-import lib.java.com.applitools.ImageTester.TestObjects.Batch;
-//import lib.java.com.applitools.ImageTester.TestObjects.PDFPageStep;
-import lib.java.com.applitools.ImageTester.TestObjects.PDFPageStep;
+import com.applitools.ImageTester.TestObjects.Batch;
+import com.applitools.ImageTester.TestObjects.PDFPageStep;
 import org.apache.pdfbox.pdmodel.PDDocument;
 import org.apache.pdfbox.rendering.PDFRenderer;
 
