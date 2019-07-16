@@ -4,6 +4,7 @@ import com.applitools.ImageTester.ImageTester;
 import com.applitools.eyes.BatchInfo;
 import com.applitools.eyes.images.Eyes;
 import com.applitools.ImageTester.Interfaces.IResultsReporter;
+import com.applitools.eyes.metadata.Image;
 
 import java.io.File;
 import java.io.IOException;
@@ -46,8 +47,6 @@ public class Batch extends TestUnit {
 
     public void run(Eyes eyes) {
         batch_ = batch_ == null ? new BatchInfo(name()) : batch_;
-//        eyes.setBatch(batch_);
-//        System.out.printf("Batch: %s\n", name());
         for (Test test : tests_) {
             try {
                 test.setEyes(ImageTester.getConfiguredEyes());

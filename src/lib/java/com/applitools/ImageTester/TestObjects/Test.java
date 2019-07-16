@@ -50,6 +50,7 @@ public class Test extends TestUnit {
     }
 
     public void run(Eyes eyes) {
+        eyes.setBatch(this.getBatch());
         eyes.open(appname_, name(), viewportSize_);
 
         for (ITestable step : steps_) {

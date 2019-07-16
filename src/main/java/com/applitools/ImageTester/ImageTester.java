@@ -18,7 +18,7 @@ import java.net.URISyntaxException;
 
 public class ImageTester {
 
-    private static final String cur_ver = "0.4.8";
+    private static final String cur_ver = "0.4.9";
     private static final String eyes_utils = "EyesUtilities.jar";
 
     private static boolean eyes_utils_enabled = false;
