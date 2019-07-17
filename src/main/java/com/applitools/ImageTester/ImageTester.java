@@ -18,7 +18,7 @@ import java.net.URISyntaxException;
 
 public class ImageTester {
 
-    private static final String cur_ver = "0.4.9";
+    private static final String cur_ver = "0.4.10";
     private static final String eyes_utils = "EyesUtilities.jar";
 
     private static boolean eyes_utils_enabled = false;
@@ -52,6 +52,8 @@ public class ImageTester {
             }
 
             Eyes eyes =getConfiguredEyes();
+
+
 
             // Folder path
             File root = new File(cmd.getOptionValue("f", "."));
@@ -257,6 +259,13 @@ public class ImageTester {
                 .build()
         );
 
+        options.addOption(Option.builder("id")
+                .longOpt("ignoreDisplacement")
+                .desc("Ignore displacment - default false")
+                .hasArg(false)
+                .build()
+        );
+
 
         if (eyes_utils_enabled) {
             System.out.printf("%s is integrated, extra features are available. \n", eyes_utils);
@@ -296,6 +305,8 @@ public class ImageTester {
                     .hasArg(false)
                     .build()
             );
+
+
         }
         return options;
     }
@@ -358,9 +369,11 @@ public class ImageTester {
         if (cmd.hasOption("ap")) eyes.setHostApp(cmd.getOptionValue("ap"));
         // Set failed tests
         eyes.setSaveFailedTests(cmd.hasOption("as"));
-        // Viewport size
 
-//        eyes.setIsDisabled(true);
+        // Ignore displacement
+        if (cmd.hasOption("id")) eyes.setIgnoreDisplacements(cmd.hasOption("id"));
+
+
 
         return eyes;
 
