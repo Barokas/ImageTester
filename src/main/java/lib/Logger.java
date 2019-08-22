@@ -33,12 +33,16 @@ public class Logger {
         setDebug(true);
     }
 
-    private void printPrefix() {
-        if (debug_)
-            out_.printf("[%s-%s] ", dateFormatter_.format(calendar.getTime()), Thread.currentThread().getName());
+    public void printProgress(int curr, int total) {
+        out_.printf("[%s/%s] ", curr, total);
     }
 
-    public void reportDebug(String format, String... args) {
+    private void printPrefix() {
+        if (debug_)
+            out_.printf("[%s] [%s] ", dateFormatter_.format(calendar.getTime()), Thread.currentThread().getName());
+    }
+
+    public void reportDebug(String format, Object... args) {
         if (!debug_) return;
         printPrefix();
         out_.printf(format, args);

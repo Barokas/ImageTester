@@ -8,9 +8,7 @@ import com.applitools.eyes.images.Eyes;
 
 import java.util.LinkedList;
 import java.util.Queue;
-import java.util.concurrent.ExecutorService;
-import java.util.concurrent.Executors;
-import java.util.concurrent.Future;
+import java.util.concurrent.*;
 
 public class TestExecutor {
     private final Logger logger_;
@@ -45,14 +43,18 @@ public class TestExecutor {
     }
 
     public void join() {
+        int total = results_.size();
+        int curr = 1;
         while (!results_.isEmpty()) {
             try {
+                logger_.printProgress(curr++, total);
                 ExecutorResult result = results_.remove().get();
                 logger_.reportResult(result);
             } catch (Exception e) {
                 logger_.reportException(e);
             }
-
         }
+
+        executorService_.shutdown();
     }
 }

@@ -3,12 +3,12 @@ import org.junit.Test;
 public class TestFullCommands {
     @Test
     public void testFolderSimple() {
-        ImageTester.main("-f src/test/TestData".split(" "));
+        ImageTester.main("-f src/test/TestData -debug".split(" "));
     }
 
     @Test
     public void testPDFSimple() {
-        ImageTester.main("-f src/test/TestData/b/c/JustPDF/Lorem2.pdf".split(" "));
+        ImageTester.main("-f src/test/TestData/b/c/JustPDF/Lorem2.pdf -debug".split(" "));
     }
 
     @Test
