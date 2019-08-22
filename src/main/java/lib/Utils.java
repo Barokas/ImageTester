@@ -46,20 +46,15 @@ public class Utils {
         String[] inputPages = input.split(",");
         for (int i = 0; i < inputPages.length; i++) {
             if (inputPages[i].contains("-")) {
-                int left = Integer.valueOf(inputPages[i].split("-")[0]);
-                int right = Integer.valueOf(inputPages[i].split("-")[1]);
-                if (left <= right) {
-                    for (int j = left; j <= right; j++) {
-                        pagesToInclude.add(j);
-                    }
-                } else {
-                    for (int j = left; j >= right; j--) {
-                        pagesToInclude.add(j);
-                    }
-                }
-            } else {
+                String[] splits = inputPages[i].split("-");
+                int left = Integer.valueOf(splits[0]);
+                int right = Integer.valueOf(splits[1]);
+                if (left <= right)
+                    for (int j = left; j <= right; pagesToInclude.add(j++)) ;
+                else
+                    for (int j = left; j >= right; pagesToInclude.add(j--)) ;
+            } else
                 pagesToInclude.add(Integer.valueOf(inputPages[i]));
-            }
         }
         return pagesToInclude;
 

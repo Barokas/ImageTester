@@ -15,4 +15,13 @@ public class TestFullCommands {
     public void testPDFSplitted(){
         ImageTester.main("-f src/test/TestData/b/c/JustPDF/Lorem3.pdf -th 10 -debug -st".split(" "));
     }
+
+    @Test
+    public void testPDFPages(){
+        ImageTester.main("-f src/test/TestData/b/c/JustPDF/Lorem3.pdf -th 10 -sp 1,2,4-5 -debug".split(" "));
+    }
+    @Test
+    public void testPDFPagesSplitted(){
+        ImageTester.main("-f src/test/TestData/b/c/JustPDF/Lorem3.pdf -th 10 -sp 1,2,4-5 -debug -st".split(" "));
+    }
 }
