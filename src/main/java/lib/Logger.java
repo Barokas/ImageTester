@@ -1,5 +1,7 @@
 package lib;
 
+import org.apache.commons.cli.HelpFormatter;
+import org.apache.commons.cli.Options;
 import org.apache.log4j.Level;
 
 import java.io.File;
@@ -96,5 +98,14 @@ public class Logger {
         if (debug_) {
             e.printStackTrace(out_);
         }
+    }
+
+    public void printVersion(String cur_ver) {
+        out_.printf("ImageTester version %s \n", cur_ver);
+    }
+
+    public void printHelp(Options options) {
+        HelpFormatter formatter = new HelpFormatter();
+        formatter.printHelp("ImageTester [-k <api-key>] [options]", options);
     }
 }

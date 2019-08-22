@@ -19,8 +19,15 @@ public class ImageTester {
         CommandLineParser parser = new DefaultParser();
         Options options = getOptions();
         Logger logger = new Logger();
+
         try {
             CommandLine cmd = parser.parse(options, args);
+
+            logger.printVersion(cur_ver);
+
+            if (cmd.getOptions().length == 0)
+                logger.printHelp(options);
+
             // Eyes factory
             EyesFactory factory
                     = new EyesFactory(cur_ver)
@@ -76,14 +83,12 @@ public class ImageTester {
             suite.run();
 
         } catch (ParseException e) {
-            out.println(e.getMessage());
-            HelpFormatter formatter = new HelpFormatter();
-            formatter.printHelp("ImageTester [-k <api-key>] [options]", options);
+            logger.reportException(e);
+            logger.printHelp(options);
         } catch (IOException e) {
             logger.reportException(e);
+            logger.printHelp(options);
             System.exit(-1);
-            HelpFormatter formatter = new HelpFormatter();
-            formatter.printHelp("ImageTester [-k <api-key>] [options]", options);
         }
     }
 
@@ -234,6 +239,7 @@ public class ImageTester {
                 .desc("Aggregate all test results in a single batch (aka flat-batch)")
                 .argName("name")
                 .build());
+
         if (eyes_utils_enabled) {
             System.out.printf("%s is integrated, extra features are available. \n", eyes_utils);
             EyesUtilitiesConfig.injectOptions(options);
