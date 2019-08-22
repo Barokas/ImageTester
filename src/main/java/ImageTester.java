@@ -94,7 +94,8 @@ public class ImageTester {
         options.addOption(Option.builder("k")
                 .longOpt("apiKey")
                 .desc("Applitools api key")
-                .hasArg().argName("apikey")
+                .hasArg()
+                .argName("apikey")
                 .build());
 
         options.addOption(Option.builder("a")
@@ -225,6 +226,7 @@ public class ImageTester {
         options.addOption(Option.builder("th")
                 .longOpt("threads")
                 .desc("Specify how many threads will be running the suite")
+                .hasArg()
                 .argName("units")
                 .build());
         options.addOption(Option.builder("fb")
