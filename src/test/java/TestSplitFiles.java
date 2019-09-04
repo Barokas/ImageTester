@@ -17,7 +17,7 @@ public class TestSplitFiles {
         conf.splitSteps = true;
         conf.logger = new Logger(System.out, true);
 
-        EyesFactory factory = new EyesFactory("1.0").apiKey(System.getenv("APPLITOOLS_API_KEY"));
+        EyesFactory factory = new EyesFactory("1.0", conf.logger).apiKey(System.getenv("APPLITOOLS_API_KEY"));
         TestExecutor executor = new TestExecutor(3, factory, conf);
         Suite suite = Suite.create(new File("src/test/TestData/b/c/JustPDF/Lorem2.pdf"), conf, executor);
         suite.run();
@@ -35,7 +35,7 @@ public class TestSplitFiles {
         conf.splitSteps = true;
         conf.logger.setDebug();
 
-        EyesFactory factory = new EyesFactory("1.0").apiKey(System.getenv("APPLITOOLS_API_KEY"));
+        EyesFactory factory = new EyesFactory("1.0", conf.logger).apiKey(System.getenv("APPLITOOLS_API_KEY"));
         TestExecutor executor = new TestExecutor(3, factory, conf);
         Suite suite = Suite.create(new File("src/test/TestData/b/c/JustPostscript/Lorem2.ps"), conf, executor);
         suite.run();
@@ -49,7 +49,7 @@ public class TestSplitFiles {
         conf.splitSteps = true;
         conf.logger.setDebug();
 
-        EyesFactory factory = new EyesFactory("1.0").apiKey(System.getenv("APPLITOOLS_API_KEY"));
+        EyesFactory factory = new EyesFactory("1.0", conf.logger).apiKey(System.getenv("APPLITOOLS_API_KEY"));
         TestExecutor executor = new TestExecutor(3, factory, conf);
         Suite suite = Suite.create(new File("src/test/TestData/b/c/d"), conf, executor);
         suite.run();

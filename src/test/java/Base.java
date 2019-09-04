@@ -12,7 +12,7 @@ public class Base {
         conf.appName = app;
         conf.viewport = new RectangleSize(1, 1);
         conf.logger = new Logger(System.out, true);
-        EyesFactory factory = new EyesFactory("1.0").apiKey(System.getenv("APPLITOOLS_API_KEY"));
+        EyesFactory factory = new EyesFactory("1.0", conf.logger).apiKey(System.getenv("APPLITOOLS_API_KEY"));
         TestExecutor executor = new TestExecutor(3, factory, conf);
         Suite suite = Suite.create(new File(file), conf, executor);
         suite.run();

@@ -9,8 +9,6 @@ import lib.TestExecutor;
 import org.junit.Test;
 
 import java.io.File;
-import java.io.IOException;
-import java.util.concurrent.ExecutionException;
 
 public class TestFolders extends Base {
     @Test
@@ -19,7 +17,7 @@ public class TestFolders extends Base {
         conf.appName = "FolderTestsApp";
         conf.viewport = new RectangleSize(1, 1);
         TestBase folderTest = new FolderTest(new File("src/test/TestData/a"), conf);
-        EyesFactory factory = new EyesFactory("1.0").apiKey(System.getenv("APPLITOOLS_API_KEY"));
+        EyesFactory factory = new EyesFactory("1.0", conf.logger).apiKey(System.getenv("APPLITOOLS_API_KEY"));
         folderTest.run(factory.build());
     }
 
@@ -29,7 +27,7 @@ public class TestFolders extends Base {
         conf.appName = "FolderTestsApp";
         conf.viewport = new RectangleSize(1, 1);
         TestBase folderTest = new FolderTest(new File("src/test/TestData/a"), conf);
-        EyesFactory factory = new EyesFactory("1.0").apiKey(System.getenv("APPLITOOLS_API_KEY"));
+        EyesFactory factory = new EyesFactory("1.0", conf.logger).apiKey(System.getenv("APPLITOOLS_API_KEY"));
         TestExecutor executor = new TestExecutor(3, factory, conf);
         executor.enqueue(folderTest, null);
         executor.join();
@@ -62,7 +60,7 @@ public class TestFolders extends Base {
         conf.viewport = new RectangleSize(1, 1);
         conf.logger = new Logger(System.out, true);
         conf.flatBatch = new BatchInfo("Flat Batch");
-        EyesFactory factory = new EyesFactory("1.0.0.1").apiKey(System.getenv("APPLITOOLS_API_KEY"));
+        EyesFactory factory = new EyesFactory("1.0.0.1", conf.logger).apiKey(System.getenv("APPLITOOLS_API_KEY"));
         TestExecutor executor = new TestExecutor(3, factory, conf);
         Suite suite = Suite.create(new File("src/test/TestData/b"), conf, executor);
         suite.run();

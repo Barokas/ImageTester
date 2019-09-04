@@ -25,4 +25,9 @@ public class TestFullCommands {
     public void testPDFPagesSplitted(){
         ImageTester.main("-f src/test/TestData/b/c/JustPDF/Lorem3.pdf -th 10 -sp 1,2,4-5 -debug -st".split(" "));
     }
+
+    @Test
+    public void testWithSecureProxy(){
+        ImageTester.main("-f src/test/TestData/b/c/JustPDF/Lorem3.pdf -th 10 -sp 1,2,4-5 -pr http://my.proxy.com:8080,user,pass -debug -st".split(" "));
+    }
 }

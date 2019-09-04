@@ -8,6 +8,7 @@ import org.apache.commons.lang3.StringUtils;
 
 public class EyesFactory {
     private final String version;
+    private final Logger logger;
     private String apiKey;
     private String serverUrl;
     private String matchLevel;
@@ -20,8 +21,9 @@ public class EyesFactory {
     private String hostApp;
     private boolean saveFailed;
 
-    public EyesFactory(String ver) {
+    public EyesFactory(String ver, Logger logger) {
         this.version = ver;
+        this.logger = logger;
     }
 
     public Eyes build() throws RuntimeException {
@@ -54,9 +56,11 @@ public class EyesFactory {
 
 
         if (this.proxy != null && this.proxy.length > 0)
-            if (proxy.length == 1)
+            if (proxy.length == 1) {
+                logger.reportDebug("Using proxy %s \n", proxy[0]);
                 eyes.setProxy(new ProxySettings(proxy[0]));
-            else if (proxy.length == 3) {
+            } else if (proxy.length == 3) {
+                logger.reportDebug("Using proxy %s with user %s and pass %s \n", proxy[0], proxy[1], proxy[2]);
                 eyes.setProxy(new ProxySettings(proxy[0], proxy[1], proxy[2]));
             } else
                 throw new RuntimeException("Proxy setting are invalid");

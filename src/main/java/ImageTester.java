@@ -8,7 +8,7 @@ import java.io.IOException;
 import java.io.PrintStream;
 
 public class ImageTester {
-    private static final String cur_ver = "1.0.1.0";
+    private static final String cur_ver = "1.0.2";
     private static final String eyes_utils = "EyesUtilities.jar";
 
     private static boolean eyes_utils_enabled = false;
@@ -22,7 +22,7 @@ public class ImageTester {
 
         try {
             CommandLine cmd = parser.parse(options, args);
-
+            logger.setDebug(cmd.hasOption("debug"));
             logger.printVersion(cur_ver);
 
             if (cmd.getOptions().length == 0)
@@ -30,7 +30,7 @@ public class ImageTester {
 
             // Eyes factory
             EyesFactory factory
-                    = new EyesFactory(cur_ver)
+                    = new EyesFactory(cur_ver, logger)
                     .apiKey(cmd.getOptionValue("k", System.getenv("APPLITOOLS_API_KEY")))
                     .serverUrl(cmd.getOptionValue("s", null))
                     .matchLevel(cmd.getOptionValue("ml", null))
@@ -46,7 +46,7 @@ public class ImageTester {
             Config config = new Config();
             config.splitSteps = cmd.hasOption("st");
             config.logger = logger;
-            config.logger.setDebug(cmd.hasOption("debug"));
+
             config.appName = cmd.getOptionValue("a", "ImageTester");
             config.DocumentConversionDPI = Float.valueOf(cmd.getOptionValue("di", "250"));
             config.pdfPass = cmd.getOptionValue("pp", null);
@@ -122,8 +122,8 @@ public class ImageTester {
                 .desc("Set proxy address")
                 .numberOfArgs(3)
                 .optionalArg(true)
-                .valueSeparator(';') //; and not : to avoid split of the http: part.
-                .argName("url [;user;password]")
+                .valueSeparator(',') //, and not ; to avoid bash commands separation
+                .argName("url [,user,password]")
                 .build()
         );
 
