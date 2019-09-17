@@ -20,6 +20,7 @@ public class EyesFactory {
     private String hostOs;
     private String hostApp;
     private boolean saveFailed;
+    private boolean ignoreDisplacments;
 
     public EyesFactory(String ver, Logger logger) {
         this.version = ver;
@@ -35,6 +36,7 @@ public class EyesFactory {
         };
         eyes.setApiKey(this.apiKey);
         eyes.setSaveFailedTests(saveFailed);
+        eyes.setIgnoreDisplacements(true);
 
         if (StringUtils.isNotBlank(this.serverUrl))
             eyes.setServerUrl(this.serverUrl);
@@ -123,6 +125,11 @@ public class EyesFactory {
 
     public EyesFactory saveFaliedTests(boolean saveFailed) {
         this.saveFailed = saveFailed;
+        return this;
+    }
+
+    public EyesFactory ignoreDisplacments(boolean ignoreDisplacments) {
+        this.ignoreDisplacments = ignoreDisplacments;
         return this;
     }
 }

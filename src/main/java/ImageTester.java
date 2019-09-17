@@ -41,6 +41,7 @@ public class ImageTester {
                     .logFile(cmd.getOptionValue("lf", null))
                     .hostOs(cmd.getOptionValue("os", null))
                     .hostApp(cmd.getOptionValue("ap"))
+                    .ignoreDisplacments(cmd.hasOption("id"))
                     .saveFaliedTests(cmd.hasOption("as"));
 
             Config config = new Config();
@@ -93,7 +94,7 @@ public class ImageTester {
         }
     }
 
-    //k,a,f,p,s,ml,bd,pb,bn,vs,lf,as,os,ap,di,sp,pn,pp,th
+    //k,a,f,p,s,ml,bd,pb,bn,vs,lf,as,os,ap,di,sp,pn,pp,th,tn,id
     private static Options getOptions() {
         Options options = new Options();
 
@@ -188,6 +189,12 @@ public class ImageTester {
         options.addOption(Option.builder("as")
                 .longOpt("autoSave")
                 .desc("Automatically save failed tests. Waring, might save buggy baselines without human inspection. ")
+                .hasArg(false)
+                .build());
+
+        options.addOption(Option.builder("id")
+                .longOpt("ignoreDisplacments")
+                .desc("Ignore Displacment when using Strict")
                 .hasArg(false)
                 .build());
 
