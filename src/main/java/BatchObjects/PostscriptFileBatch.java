@@ -62,6 +62,8 @@ public class PostscriptFileBatch extends BatchBase {
 
         @Override
         public String name() {
+            if(null!=this.config().testName)
+                return this.config().testName;
             return super.name() + " Page - " + this.pageNumber_;
         }
     }

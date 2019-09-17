@@ -8,7 +8,7 @@ import java.io.IOException;
 import java.io.PrintStream;
 
 public class ImageTester {
-    private static final String cur_ver = "1.0.2";
+    private static final String cur_ver = "1.0.3";
     private static final String eyes_utils = "EyesUtilities.jar";
 
     private static boolean eyes_utils_enabled = false;
@@ -48,6 +48,7 @@ public class ImageTester {
             config.logger = logger;
 
             config.appName = cmd.getOptionValue("a", "ImageTester");
+            config.testName = cmd.getOptionValue("tn");
             config.DocumentConversionDPI = Float.valueOf(cmd.getOptionValue("di", "250"));
             config.pdfPass = cmd.getOptionValue("pp", null);
             config.pages = cmd.getOptionValue("sp", null);
@@ -108,6 +109,13 @@ public class ImageTester {
                 .desc("Set own application name, default: ImageTester")
                 .hasArg()
                 .argName("name")
+                .build());
+
+        options.addOption(Option.builder("tn")
+                .longOpt("testName")
+                .desc("Set own TestName to all tests - by default: \n *) PDFs are named by the fileName \n *) folders with images are named by the folderName \n *) standalone images are named by the fileName")
+                .hasArg()
+                .argName("testName")
                 .build());
 
         options.addOption(Option.builder("f")

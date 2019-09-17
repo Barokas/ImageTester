@@ -19,7 +19,14 @@ public abstract class DocumentTestBase extends TestBase {
         String pagesText = "";
         if (config().pages != null && config().includePageNumbers)
             pagesText = " pages [" + config().pages + "]";
-        return file().getName() + pagesText;
+        String name = file().getName() + pagesText;
+        if(null==this.config().testName) {
+            return name;
+        }
+        else{
+            this.fileNameProperty=name;
+            return this.config().testName;
+        }
     }
 
 

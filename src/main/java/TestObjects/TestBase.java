@@ -12,6 +12,7 @@ import java.io.File;
 public abstract class TestBase implements ITest {
     private final File file_;
     private final Config conf_;
+    protected String fileNameProperty =null;
 
     public TestBase(File file, Config conf) {
         this.file_ = file;
@@ -35,6 +36,10 @@ public abstract class TestBase implements ITest {
     }
 
     public String name() {
+        if(null!=this.config().testName){
+            this.fileNameProperty=file_.getName();
+            return this.config().testName;
+        }
         return file_.getName();
     }
 

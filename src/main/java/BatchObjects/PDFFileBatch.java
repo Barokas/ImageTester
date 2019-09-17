@@ -49,6 +49,8 @@ public class PDFFileBatch extends BatchBase {
 
         @Override
         public String name() {
+            if(null!=this.config().testName)
+                return this.config().testName;
             return super.name() + " Page - " + this.page_;
         }
 

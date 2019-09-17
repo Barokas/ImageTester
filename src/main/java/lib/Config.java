@@ -14,6 +14,7 @@ public class Config {
     public Logger logger = new Logger();
     public EyesUtilitiesConfig eyesUtilsConf;
     public BatchInfo flatBatch = null;
+    public String testName = null;
 
     public void setViewport(String viewport) {
         if (viewport == null) return;
